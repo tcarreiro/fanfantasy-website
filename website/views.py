@@ -57,7 +57,7 @@ def classificacao():
             tab = request.form.get('standing_tab')
             year = int(request.form.get('season'))
         if (year != current_year):
-            [league, week, day, league_year] = load_info(year=year)
+            [league, week, day, league_year, time] = load_info(year=year)
         else:
             league_year=current_year
     else:
@@ -107,7 +107,7 @@ def rankings():
         #    week = int(request.form.get('selected_week'))
         #    year = int(request.form.get('selected_season'))
         if (year != current_year or week != current_week):
-            [league, league_week, day, league_year] = load_info(year=year, week=week)
+            [league, league_week, day, league_year, time] = load_info(year=year, week=week)
             print('ok')
             
         else:
