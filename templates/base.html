@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+        <title>{% block title %}Home{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="static/img/fanfantasy-logo-blue.png">
+    </head>
+    <body>
+        <div class="main-container">
+            <div class="matches-strip">
+                <div class="matches-container">
+                    <div class="match-strip-prev-week">
+                        <button class="match-strip-week-button"><</button>
+                    </div>
+                    <div class="matches-strip-list-content">
+                        <ul class="score-strip-list">
+                            {% for i in range(0,8) %}
+                            <li class="score-strip-game">
+                                <div class="score-strip-match-box">
+                                    <div class="score-strip-team-box">
+                                        <div class="score-strip-team">
+                                            <img class="score-strip-team-logo" src="{{ matchup_data['Logo1'][i] }}" onError="this.onerror=null;this.src='static/img/default.png';"/>
+                                            <span>{{ matchup_data['Abbrev1'][i] }}</span>
+                                        </div>
+                                        <div class="score-strip-record">
+                                            <span>
+                                                {% if ((weekday > 1) or (weekday == 2 and time.hour >= 3)) and (((weekday < 4) or (weekday == 3 and time.hour <= 21))) %}
+                                                {{matchup_data['Record1'][i] }}
+                                                {% else %}
+                                                {{matchup_data['Score1'][i] }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="score-strip-team-box">
+                                        <div class="score-strip-team">
+                                            <img class="score-strip-team-logo" src="{{ matchup_data['Logo2'][i] }}" onError="this.onerror=null;this.src='static/img/default.png';"/>
+                                            <span>{{ matchup_data['Abbrev2'][i] }}</span>
+                                        </div>
+                                        <div class="score-strip-record">
+                                            <span>
+                                                {% if ((weekday > 1) or (weekday == 2 and time.hour >= 3)) and (((weekday < 4) or (weekday == 3 and time.hour <= 21))) %}
+                                                {{matchup_data['Record2'][i] }}
+                                                {% else %}
+                                                {{matchup_data['Score2'][i] }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="score-strip-match-day">
+                                        <a href="#"></a>
+                                        <a href="#"></a>
+                                        <span>Semana {{ current_week }}</span>
+                                        <span class="facemask-hover hover-bar"></span>
+                                        {% if (((weekday < 2) or (weekday == 2 and time.hour < 3)) or (((weekday > 4) or (weekday == 4 and time.hour > 21)))) %}
+                                        <span class="hover-bar-playing"></span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="match-strip-next-week">
+                        <button class="match-strip-week-button">></button>
+                    </div>
+                </div>
+            </div>
+
+            <header class="strip-header">
+                <div class="header-container">
+                    <a href="/home" class="header-logo"><img class="header-logo" src="static/img/fanfantasy-logo-blue.png"/></a>
+                    <nav class="header-navigation">
+                        <ul class="header-navigation-list">
+                            <p id="hidden-p" value="{{url_for(request.endpoint)}}"></p>
+                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/' %}active{% endif %}">
+                                <a href="/">Home</a>
+                            </li>
+                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/classificacao' %}active{% endif %}">
+                                <a href="/classificacao">Classificação</a>
+                            </li>
+                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/rankings' %}active{% endif %}">
+                                <a href="/rankings">Rankings</a>
+                            </li>
+                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/fanfastats' %}active{% endif %}">
+                                <a href="/fanfastats">Next Gen Fanfastats</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav class="header-navigation-secondary">   </nav>
+            </header>
+
+            <div class="body-container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="static/scripts/scripts.js"></script>
+    </body>
+</html>     

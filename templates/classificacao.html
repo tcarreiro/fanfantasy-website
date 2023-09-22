@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}Fanfantasy Football - Classificação{% endblock %}   
+{% block content %}
+    <!-- classificação -->
+    <section class="section-navigation">
+        <div class="section-navigation-inner">
+            <ul class="section-navigation-list">
+                <form method="post" class="section-navigation-list">
+                    <input type="hidden" name="standing_tab" value="{{ tab }}"/>
+                    <input type="hidden" name="selected_season" value="{{ league_year }}"/>
+                    <input type="hidden" name="form_selector" value="tabs">
+                    <li class="section-navigation-item">
+                        <button class="link {% if (tab == 'group') %}active{% endif %}" name="action" value="group" type="submit">DIVISÃO</button>
+                    </li> 
+                    <li class="section-navigation-item">
+                        <button class="link {% if (tab != 'group') %}active{% endif %}" name="action" value="overall" type="submit">GERAL</button>
+                    </li>
+                </form>
+            </ul>
+        </div>
+        
+        <div class="section-parameters">
+            <div class="section-parameters-inner">
+                <div class="section-parameters-selectors">
+                    <form method="post" id="season_dropdown" class="section-parameters-form">
+                        <input type="hidden" name="standing_tab" value="{{ tab }}"/>
+                        <input type="hidden" name="selected_season" value="{{ league_year }}"/>
+                        <input type="hidden" name="form_selector" value="year">
+                        <label for="section-parameters-dropdown">Ano</label>
+                        <select class="section-parameters-dropdown" id="year-dropdown" name="season" onchange="document.getElementById('season_dropdown').submit();">
+                            {% for y in range(current_year, 2017, -1) %}
+                            <option value="{{ y }}" {% if y == league_year %}selected="" {% endif %}>{{ y }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-tables">
+            <div class="section-tab-format {% if (tab != 'group') %}hide{% endif %}">
+                {% for r in range (1,4,2) %}
+                <div class="section-table-row">
+                    {% for d in range (r,r+2) %}
+                    <div class="section-table-format">
+                        <div class="section-table-title"><h3>D0{{ d }}</h3></div>
+                        <div class="row">
+                            <div class="col first tb-header">Time</div>
+                            <div class="col tb-header">Record</div>
+                            <div class="col tb-header">%</div>
+                            <div class="col tb-header">PF</div>
+                            <div class="col tb-header">PS</div>
+                        </div>
+                        {% for i in range((d-1)*4,d*4) %}
+                        <div class="row">
+                            <div class="col first team">
+                                <img class="section-table-team-logo" src="{{ teams_data['Logo'][i] }}" onError="this.onerror=null;this.src='static/img/default.png';">
+                                <div class="name">{{ teams_data['Name'][i] }}</div>
+                            </div>
+                            <div class="col team">{{ teams_data['Wins'][i] }}-{{ teams_data['Losses'][i] }}-{{ teams_data['Ties'][i] }}</div>
+                            <div class="col team">{{ teams_data['%'][i] }}</div>
+                            <div class="col team">{{ teams_data['PF'][i] }}</div>
+                            <div class="col team">{{ teams_data['PA'][i] }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="standings-tab-format {% if (tab == 'group') %}hide{% endif %}">
+                <div class="section-table-row">
+                    <div class="section-table-format">
+                        <div class="section-table-title"><h3>Geral</h3></div>
+                        <div class="row">
+                            <div class="col first tb-header">Time</div>
+                            <div class="col tb-header">Record</div>
+                            <div class="col tb-header">%</div>
+                            <div class="col tb-header">PF</div>
+                            <div class="col tb-header">PS</div>
+                        </div>
+                        {% for i in range(0,16) %}
+                        <div class="row">
+                            <div class="col first team">
+                                <img class="section-table-team-logo" src="{{ teams_data['Logo'][i] }}" onError="this.onerror=null;this.src='static/img/default.png';">
+                                <div class="name">{{ teams_data['Name'][i] }}</div>
+                            </div>
+                            <div class="col team">{{ teams_data['Wins'][i] }}-{{ teams_data['Losses'][i] }}-{{ teams_data['Ties'][i] }}</div>
+                            <div class="col team">{{ teams_data['%'][i] }}</div>
+                            <div class="col team">{{ teams_data['PF'][i] }}</div>
+                            <div class="col team">{{ teams_data['PA'][i] }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--<div class="standings-content">
+            <div class="standings-header-logo">
+                 Logo 
+                <img src="static/img/fanfantasy-logo-white.png">
+            </div>
+            <div class="standings-tab-format {% if (tab != 'group') %}hide{% endif %}">
+                {% for r in range (1,4,2) %}
+                <div class="standings-row">
+                    {% for d in range (r,r+2) %}
+                    <div class="division">
+                        <div class="division-title"><h3>D0{{ d }}</h3></div>
+                        <div class="row">
+                            <div class="col first tb-header">Time</div>
+                            <div class="col tb-header">Record</div>
+                            <div class="col tb-header">%</div>
+                            <div class="col tb-header">PF</div>
+                            <div class="col tb-header">PS</div>
+                        </div>
+                        {% for i in range((d-1)*4,d*4) %}
+                        <div class="row">
+                            <div class="col first team">
+                                <img class="team-standing-logo" src="{{ teams_data['Logo'][i] }}" alt="">
+                                <div class="name">{{ teams_data['Name'][i] }}</div>
+                            </div>
+                            <div class="col team">{{ teams_data['Wins'][i] }}-{{ teams_data['Losses'][i] }}-{{ teams_data['Ties'][i] }}</div>
+                            <div class="col team">{{ teams_data['%'][i] }}</div>
+                            <div class="col team">{{ teams_data['PF'][i] }}</div>
+                            <div class="col team">{{ teams_data['PA'][i] }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="standings-tab-format {% if (tab == 'group') %}hide{% endif %}">
+                <div class="standings-row">
+                    <div class="division">
+                        <div class="division-title"><h3>Geral</h3></div>
+                        <div class="row">
+                            <div class="col first tb-header">Time</div>
+                            <div class="col tb-header">Record</div>
+                            <div class="col tb-header">%</div>
+                            <div class="col tb-header">PF</div>
+                            <div class="col tb-header">PS</div>
+                        </div>
+                        {% for i in range(0,16) %}
+                        <div class="row">
+                            <div class="col first team">
+                                <img class="team-standing-logo" src="{{ teams_data['Logo'][i] }}" alt="">
+                                <div class="name">{{ teams_data['Name'][i] }}</div>
+                            </div>
+                            <div class="col team">{{ teams_data['Wins'][i] }}-{{ teams_data['Losses'][i] }}-{{ teams_data['Ties'][i] }}</div>
+                            <div class="col team">{{ teams_data['%'][i] }}</div>
+                            <div class="col team">{{ teams_data['PF'][i] }}</div>
+                            <div class="col team">{{ teams_data['PA'][i] }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>-->
+{% endblock %}
