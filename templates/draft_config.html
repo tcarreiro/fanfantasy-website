@@ -1,0 +1,151 @@
+{% extends "draft_base.html" %}
+{% block title %}Draft Config{% endblock %}
+{% block content %}
+<!-- home -->
+
+<div class="viewport">
+    <div class="msg"><h3>Pressione o botão para criar um novo banco de dados dos rosters atualizados pela ESPN.com:</h3></div>
+    <form method="post" id="import-data-from-espn-form" class="section-parameters-form-onsubmit">
+        <input type="hidden" name="form_selector" value="import-data-from-espn">
+        <button class="section-parameters-submit" name="import_players_list" type="submit">Importar</button>
+    </form>
+    {% if msg_id == 1 %}
+    <div class="msg"><h5>{{ msg[msg_id] }}</h5></div>
+    {% endif %}
+
+    <br/>
+    <br/>
+
+    <div class="msg"><h3>Pressione o botão para configurar a lista do draft. A retirar da lista de jogadores os que não dentro do ranking escolhido no board do Fantasy Pros, adicionar os free agents, as defesas e colocar flag de novatos e byes</h3></div>
+    <br/>
+    <form method="post" id="create-draft-list-form" class="section-parameters-form-onsubmit">
+        <input type="hidden" name="form_selector" value="create-draft-list">
+        <label for="fp-board-range">Quantidade de jogadores: (não inclui defesas)</label>
+        <input type="number" name="fp-board-range" class="input-text" min="1" max="750" value="350"/>
+        <button class="section-parameters-submit" name="import_players_list" type="submit">Configurar</button>
+    </form>
+    {% if msg_id == 2 %}
+    <div class="msg"><h5>{{ msg[msg_id] }}</h5></div>
+    {% endif %}
+
+    <br/>
+    <br/>
+
+    {% if msg_id == 3 %}
+    <div class="msg"><h5>{{ msg[msg_id] }}</h5></div>
+    {% endif %}
+    <table name="draft_list_table">
+        <tr>
+            <th>#</th>
+            <th>Foto</th>
+            <th>URL da foto</th>
+            <th>Nome</th>
+            <th>Posição</th>
+            <th></th>
+            <th>Time</th>
+            <th>Novato?</th>
+            <th>Bye</th>
+            <th>Ação</th>
+        </tr>
+        <form method="post" class="players_list_table">
+            <input type="hidden" name="form_selector" value="players_list_edit">
+            {% for i in range(0,draft_list|length) %}
+            {% if draft_list['position'][i] != 'DST' %}
+            <tr>
+                <td>
+                    <span>{{ i+1 }}</span>
+                </td>
+                <td>
+                    <img src="{{ draft_list['profile_pic'][i] }}" onError="this.onerror=null;this.src='static/img/default-player.png';" style='width:24x;height:48px;'/>
+                </td>
+                <td>
+                    <input type="text" name="profile-picture-url {{ i }}" class="input-text" value="{{ draft_list['profile_pic'][i] }}"/>
+                </td>
+                <td>
+                    <input type="text" name="players-name {{ i }}" class="input-text" value="{{draft_list['first_name'][i] + ' ' + draft_list['last_name'][i]}}"/>
+                </td>
+                <td>
+                    <select class="selector-box" name="players-position {{ i }}">
+                        <option value="QB" {% if draft_list['position'][i] == 'QB' %}selected{%endif%}>QB</option>
+                        <option value="RB" {% if draft_list['position'][i] == 'RB' %}selected{%endif%}>RB</option>
+                        <option value="WR" {% if draft_list['position'][i] == 'WR' %}selected{%endif%}>WR</option>
+                        <option value="TE" {% if draft_list['position'][i] == 'TE' %}selected{%endif%}>TE</option>
+                    </select>
+                </td>
+                <td>
+                    <img src="static/img/teams-logos/{{ draft_list['team'][i] }}.png"  onError="this.onerror=null;this.src='static/img/nfl-logo.png';" style='width:36x;height:36px;'/>
+                </td>
+                <td>
+                    <select class="selector-box" name="players-team {{ i }}">
+                        <option value="FA">FA</option>
+                        {% for team in teams_list %}
+                        <option value="{{ team }}" {% if team.replace(' ','_').lower() == draft_list['team'][i] %}selected{%endif%}>{{ team }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" class="check-box" name="is-rookie {{ i }}" {% if draft_list['rookie'][i]%}checked{%endif%} />
+                    
+
+                </td>
+                <td>
+                    {{draft_list['bye'][i]}}
+
+                </td>
+                <td>
+                    <button class="section-parameters-submit" name="action" value="update {{i}}" type="submit">ATUALIZAR</button>
+                    <button class="section-parameters-submit" name="action" value="delete {{i}}" type="submit">DELETAR</button>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            <tr>
+                <td>{{ draft_list|length+1 }}</td>
+                <td>
+                    <img src="static/img/default-player.png" style='width:24x;height:48px;'/>
+                </td>
+                <td>
+                    <input type="text" name="profile-picture-url {{ draft_list|length }}" class="input-text"/>
+                </td>
+                <td>
+                    <input type="text" name="players-name {{ draft_list|length }}" class="input-text"/>
+                </td>
+                <td>
+                    <select class="selector-box" name="players-position {{ draft_list|length }}">
+                        <option value="QB" selected>QB</option>
+                        <option value="RB">RB</option>
+                        <option value="WR">WR</option>
+                        <option value="TE">TE</option>
+                    </select>
+                </td>
+                <td>
+                    <img src=""  onError="this.onerror=null;this.src='static/img/nfl-logo.png';" style='width:36x;height:36px;'/>
+                </td>
+                <td>
+                    <select class="selector-box" name="players-team {{ draft_list|length }}">
+                        <option value="FA" selected>FA</option>
+                        {% for team in teams_list %}
+                        <option value="{{ team }}">{{ team }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" class="check-box" name="is-rookie {{ draft_list|length }}" />
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    <button class="section-parameters-submit" name="action" value="add {{ draft_list|length }}" type="submit">ADICIONAR</button>
+                </td>
+            </tr>
+        </form> 
+      </table>
+
+    <br/>
+    <br/>
+    
+
+</div>
+
+{% endblock %}

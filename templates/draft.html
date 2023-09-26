@@ -1,0 +1,102 @@
+{% extends "draft_base.html" %}
+{% block title %}Draft List{% endblock %}
+{% block content %}
+<!-- home -->
+
+<div class="viewport">
+    <div class="section-form">
+        <form method="post" id="parameters_dropdown" class="section-parameters-form-onsubmit">
+            <ul class="form-checkbox">
+                <label for="section-parameters-dropdown">Selecione as posições: </label>
+                <li class="checkbox-item">
+                    <input type="checkbox" class="check-box" id="QB" name="QB"
+                    {% if "QB" in display_positions %}
+                    checked
+                    {% endif %}>
+                    <label for="QB">QB</label><br>
+                </li>
+                <li class="checkbox-item">
+                    <input type="checkbox" class="check-box" id="RB" name="RB"
+                    {% if "RB" in display_positions %}
+                    checked
+                    {% endif %}>
+                    <label for="RB">RB</label><br>
+                </li>
+                <li class="checkbox-item">
+                    <input type="checkbox" class="check-box" id="WR" name="WR"
+                    {% if "WR" in display_positions %}
+                    checked
+                    {% endif %}>
+                    <label for="WR">WR</label><br>
+                </li>
+                <li class="checkbox-item">
+                    <input type="checkbox" class="check-box" id="TE" name="TE"
+                    {% if "TE" in display_positions %}
+                    checked
+                    {% endif %}>
+                    <label for="TE">TE</label><br>
+                </li>
+                <li class="checkbox-item">
+                    <input type="checkbox" class="check-box" id="DST" name="DST"
+                    {% if "DST" in display_positions %}
+                    checked
+                    {% endif %}>
+                    <label for="DST">DST</label><br>
+                </li>
+                <button class="section-parameters-submit" name="submit" type="submit">Gerar</button>
+            </ul>
+        </form>
+    </div>
+    <div class="section-form">
+        <ul class="players-list">
+            {% for i in range(0,amount) %}
+            <li class="player-card">
+                <div class="player-container">
+                    <div class="profile-container">
+                        {% if player_df['position'][i] != 'DST' %}
+                        <div>
+                            <img class="team-logo" src="static/img/teams-logos/{{ player_df['team'][i] }}.png"  onError="this.onerror=null;this.src='static/img/nfl-logo.png';"/>
+                        </div>
+                        <div>
+                            <img class="player-picture" src="{{ player_df['profile_pic'][i] }}" onError="this.onerror=null;this.src='static/img/default-player.png';"/>
+                            {% if player_df['rookie'][i] %}
+                            <img class="rookie-flag" src="static/img/rookie_flag.png"/>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div>
+                            <img class="tdst" src="static/img/teams-logos/{{ player_df['team'][i] }}.png"  onError="this.onerror=null;this.src='static/img/nfl-logo.png';"/>
+                        </div>
+                        <div>
+                            <img class="pdst" src="static/img/teams-logos/{{ player_df['team'][i] }}.png" onError="this.onerror=null;this.src='static/img/nfl-logo.png';"/>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="player-info">
+                        <div class="upper-info {{ player_df['position'][i] }}">
+                            <div class="player-position">{{ player_df['position'][i] }}</div>
+                            <div class="player-first-name {% if player_df['first_name'][i]|length >= 13 %}
+                                small-name
+                            {% endif %}">{{ player_df['first_name'][i] }}</div>
+                            <div class="team-bye">{{ player_df['bye'][i] }}</div>
+                        </div>
+                        <div class="lower-info {% if player_df['last_name'][i]|length >= 15 %}
+                            small-text
+                            {% elif player_df['last_name'][i]|length >= 11 %}
+                            medium-text
+                            {% endif %}
+                            {% if player_df['last_name'][i] == 'blank_label' %}
+                            empty-label
+                            {% endif %}" style='width:340px;height:70px;'>
+                        <span>
+                            {{ player_df['last_name'][i] }}
+                        </span>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% block navigation %}
+<header class="strip-header">
+    <div class="header-container">
+        <a href="/home" class="header-logo"><img class="header-logo" src="static/img/fanfantasy-logo-blue.png"/></a>
+        <nav class="header-navigation">
+            <ul class="header-navigation-list">
+                <p id="hidden-p" value="{{url_for(request.endpoint)}}"></p>
+                <li class="header-navigation-link {% if url_for(request.endpoint) == '/' %}active{% endif %}">
+                    <a href="/">Home</a>
+                </li>
+                <li class="header-navigation-link {% if url_for(request.endpoint) == '/classificacao' %}active{% endif %}">
+                    <a href="/classificacao">Classificação</a>
+                </li>
+                <li class="header-navigation-link {% if url_for(request.endpoint) == '/rankings' %}active{% endif %}">
+                    <a href="/rankings">Rankings</a>
+                </li>
+                <li class="header-navigation-link {% if url_for(request.endpoint) == '/fanfastats' %}active{% endif %}">
+                    <a href="/fanfastats">Next Gen Fanfastats</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <nav class="header-navigation-secondary">   </nav>
+</header>
+{% endblock %}

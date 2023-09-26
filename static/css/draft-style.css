@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --qb-color: #800;
+    --rb-color: #080;
+    --wr-color: #008;
+    --te-color: #F0F;
+    --dst-color: #303;    
+    --bg-color: #FFF;    
+    --main-color: #008;    
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: All-ProSans,Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    background-color: var(--bg-color);
+}
+
+.viewport {
+    justify-content: center;
+    /* 300vw para 12 colunas, 100vw para padrão */
+    width: 100vw;
+}
+
+.section-form {
+}
+
+.section-parameters-submit {
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.4;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    background: linear-gradient(180deg, #4B91F7 0%, var(--main-color) 100%);
+    background-origin: border-box;
+    box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+    transition: 500ms;
+}
+
+.section-parameters-submit:hover {
+    background: linear-gradient(180deg, var(--main-color) 0%, #205ac5 100%);
+}
+
+.players-list {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.player-card {
+}
+
+.form-checkbox {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 2px solid lightslategray;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
+}
+
+.checkbox-item {
+}
+
+
+
+/*****************************************************************/
+/************************** GERAL ********************************/
+/*****************************************************************/
+
+.players-board {
+    translate: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 150px;
+    justify-content: center;
+    align-items: center;
+}   
+
+.players-container {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 440px;
+}
+
+.team-logo {
+    position: absolute;
+    z-index: -1;
+    height: 56px;
+    width: 56px;
+}
+.rookie-flag {
+    translate: -75px 55px;
+    position: absolute;
+    z-index: 100;
+    height: 20px;
+    width: 20px;
+}
+
+.tdst {
+    display: none;
+}
+
+.pdst {
+    border-radius: 20%;
+    height: 85px;
+    width: 85px;
+}
+
+.player-picture {
+    border-radius: 20%;
+    translate: 15px 15px;
+    z-index: 10;
+    height: 100px;
+    width: 75px;
+    object-fit: cover;
+}
+
+.player-info {
+    position: absolute;
+    transform: translate(90px, -90px);
+}
+
+.upper-info {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    color: var(--bg-color);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.QB {
+    background-color: var(--qb-color);
+}
+
+.RB {
+    background-color: var(--rb-color);
+}
+
+.WR {
+    background-color: var(--wr-color);
+}
+
+.TE {
+    background-color: var(--te-color);
+}
+
+.DST {
+    background-color: var(--dst-color);
+}
+
+.player-position,
+.player-first-name,
+.team-bye {
+    display: flex;
+    flex-direction: row;
+    min-width: 80px;
+    max-width: 80px;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-first-name{
+    min-width: 180px;
+    max-width: 180px;
+}
+
+.lower-info {
+    display: flex;
+    font-size: 48px;
+    font-weight: 800;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+    align-items: center;
+    color: #000;
+}
+
+.empty-label {
+    color: var(--bg-color);
+}
+
+.medium-text {
+    font-size: 40px;
+}
+
+.small-text {
+    font-size: 34px;
+}
+
+.small-name {
+    font-size: 16px;
+}
+
+.selector-box {
+    box-shadow: inset #7f8081 0 0 0 2px;
+    border: 0;
+    background: rgba(0, 0, 0, 0);
+    border-radius: 3px;
+    padding: 9px 12px;
+    line-height: 1.4;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    font-weight: 400;
+    height: 40px;
+    transition: all .2s ease;
+}
+
+.selector-box:hover{
+    box-shadow: 0 0 0 0 #fff inset, var(--main-color) 0 0 0 2px;
+}
+.selector-box:focus{
+    background: #fff;
+    outline: 0;
+    box-shadow: 0 0 0 0 #fff inset, var(--main-color) 0 0 0 3px;
+}
+
+.input-text {
+    box-shadow: inset #7f8081 0 0 0 2px;
+    border: 0;
+    background: rgba(0, 0, 0, 0);
+    appearance: none;
+    position: relative;
+    border-radius: 3px;
+    padding: 9px 12px;
+    line-height: 1.4;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    font-weight: 400;
+    height: 40px;
+    transition: all .2s ease;
+}
+.input-text:hover{
+    box-shadow: 0 0 0 0 #fff inset, var(--main-color) 0 0 0 2px;
+}
+.input-text:focus{
+    background: #fff;
+    outline: 0;
+    box-shadow: 0 0 0 0 #fff inset, var(--main-color) 0 0 0 3px;
+}
+
+.check-box {
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: #7f8081;
+    width: 1.4em;
+    height: 1.4em;
+    border: 0.15em solid #7f8081;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+    place-content: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: auto;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
