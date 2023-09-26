@@ -209,7 +209,7 @@ def draft_config():
                 msg_id = 5
             else:
                 pass
-            
+
             # Atualizar lista
             draft_list = espnrequest.get_draft_list()
     else:
