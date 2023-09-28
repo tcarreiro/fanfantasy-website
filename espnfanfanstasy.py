@@ -44,7 +44,7 @@ class FantasyLeague:
         '''
         Load the league JSON from the ESPN API
         '''
-        url = self.BASE_URL.format(year=self.year, league_id=self.league_id)
+        url = self.base_url.format(year=self.year, league_id=self.league_id)
         return self.make_request(url + '?view=mMatchup&view=mMatchupScore',
                                  params={'scoringPeriodId': week, 'matchupPeriodId': week}, view='mMatchup')
 
@@ -124,7 +124,7 @@ class FantasyLeague:
         Load the team names from the league JSON
         '''
         # Define the URL with our parameters
-        url = self.BASE_URL.format(year=self.year, league_id=self.league_id)
+        url = self.base_url.format(year=self.year, league_id=self.league_id)
 
         team_json = self.make_request(url,
                                       params={"leagueId": self.league_id,

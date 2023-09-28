@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from website.views import views
 from website.auth import auth
 from website.models import User, Note
+import website.league
 
 load_dotenv()
 
