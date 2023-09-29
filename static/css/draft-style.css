@@ -39,6 +39,7 @@ body {
 }
 
 .section-form {
+    margin: 0;
 }
 
 .section-parameters-submit {
@@ -73,6 +74,7 @@ body {
 }
 
 .player-card {
+    margin: 0;
 }
 
 .form-checkbox {
@@ -87,8 +89,8 @@ body {
 }
 
 .checkbox-item {
+    margin: 0;
 }
-
 
 
 /*****************************************************************/

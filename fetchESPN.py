@@ -4,9 +4,10 @@ import pandas as pd
 import espnfanfanstasy as espn
 import os
 
-
-def connect_league(year):
-  league = espn.FantasyLeague(league_id=270838,
+league = None
+def connect_league(league_id, year):
+  global league
+  league = espn.FantasyLeague(league_id=league_id,
                               year=year,
                               swid=os.getenv("swid"),
                               espn_s2=os.getenv("espn_s2"))
