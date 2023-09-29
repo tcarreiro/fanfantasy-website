@@ -3,7 +3,6 @@ var timeOutId = 0;
 var requestMatchupESPN = function () {
     var this_weekday = parseInt(document.getElementById('weekday').value)
     var this_hour = parseInt(document.getElementById('hour').value)
-    console.log("Chamando JS")
 
     if (((this_weekday < 2) || (this_weekday == 2 && this_hour < 3)) || (((this_weekday > 4) || (this_weekday == 4 && this_hour > 21)))) {
         $.ajax({
