@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 import pandas as pd
 import request_folder.nfl_requests as espnrequest
 import os
 import website.league as league
+import fetchESPN as fetch
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -19,27 +20,37 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    [matchup_data, teams_data, current_year, current_week, weekday, time] = league.home()
-    return render_template("home.html", matchup_data=matchup_data, teams_data=teams_data, current_year=current_year, current_week=current_week, weekday=weekday, time=time)
+    [matchup_data, current_week, weekday, current_year, time] = league.home()
+    return render_template("home.html", current_week=current_week, current_year=current_year, weekday=weekday, hour=time.hour, matchup_data=matchup_data)
+
+@views.route('/update_match_strip', methods=['POST'])
+def requestMatchupESPN():
+    # Recuperando dados TODO precisa fazer verificação? Há risco de perda de dados nos 'hiddens'?
+    current_week = int(request.form.get('current_week'))
+    weekday = int(request.form.get('weekday'))
+    current_year = int(request.form.get('current_year'))
+    hour = int(request.form.get('hour'))
+    matchup_data = fetch.league.get_current_scores(week=current_week)
+    return jsonify({'data': render_template("match_strip.html", current_week=current_week, weekday=weekday, current_year=current_year, hour=hour, matchup_data=matchup_data)})
     
 
-@views.route('/classificacao', methods=['GET', 'POST'])
-def classificacao():
-    [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year, time] = league.classificacao()
-    return render_template("classificacao.html", matchup_data=matchup_data, teams_data=teams_data,
-                           tab=tab, current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, time=time)
+#@views.route('/classificacao', methods=['GET', 'POST'])
+#def classificacao():
+#    [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year, time] = league.classificacao()
+#    return render_template("classificacao.html", matchup_data=matchup_data, teams_data=teams_data,
+#                           tab=tab, current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, time=time)
 
-@views.route('/fanfastats', methods=['GET', 'POST'])
-def fanfastats():
-    [matchup_data, teams_data, current_year, current_week, weekday, time] = league.fanfastats()
-    return render_template("fanfastats.html", matchup_data=matchup_data, teams_data=teams_data,
-                           current_year=current_year, current_week=current_week, weekday=weekday, time=time)
+#@views.route('/fanfastats', methods=['GET', 'POST'])
+#def fanfastats():
+#    [matchup_data, teams_data, current_year, current_week, weekday, time] = league.fanfastats()
+#    return render_template("fanfastats.html", matchup_data=matchup_data, teams_data=teams_data,
+#                           current_year=current_year, current_week=current_week, weekday=weekday, time=time)
 
-@views.route('/rankings', methods=['GET', 'POST'])
-def rankings():
-    [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year,league_week, time] = league.rankings() 
-    return render_template("rankings.html", matchup_data=matchup_data, teams_data=teams_data, tab=tab,
-                           current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, league_week=league_week, time=time)
+#@views.route('/rankings', methods=['GET', 'POST'])
+#def rankings():
+#    [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year,league_week, time] = league.rankings() 
+#    return render_template("rankings.html", matchup_data=matchup_data, teams_data=teams_data, tab=tab,
+#                           current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, league_week=league_week, time=time)
 
 ##############################
 ##### DRAFTS

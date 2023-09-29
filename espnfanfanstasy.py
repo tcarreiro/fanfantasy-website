@@ -454,3 +454,111 @@ class FantasyLeague:
         standings_df['Wins_Deviation'] = standings_df['Wins'] - standings_df['ExpectedVictories']
 
         return standings_df
+    
+    def get_current_scores(self, week):
+        #week = week-1 # TODO Identificação da semana precisa desse -1?
+
+        # Pull team and matchup data from the URL
+        matchup_response = requests.get(self.base_url,
+                                        params={"leagueId": self.league_id,
+                                                "seasonId": self.year,
+                                                "matchupPeriodId": week,
+                                                "view": "mMatchup"},
+                                        cookies=self.cookies)
+
+        team_response = requests.get(self.base_url,
+                                        params={"leagueId": self.league_id,
+                                                "seasonId": self.year,
+                                                "matchupPeriodId": week,
+                                                "view": "mTeam"},
+                                        cookies=self.cookies)
+
+        # Transform the response into a json
+        matchup_json = matchup_response.json()
+        team_json = team_response.json()
+
+        # Transform both of the json outputs into DataFrames
+        matchup_df = pd.json_normalize(matchup_json['schedule'])
+        team_df = pd.json_normalize(team_json['teams'])
+
+        # Retirar todas as semanas que não seja a atual
+        matchup_df.drop(matchup_df[matchup_df['matchupPeriodId'] != week].index, inplace=True)
+
+        # Define the column names needed
+        matchup_column_names = {
+            'matchupPeriodId': 'Week',
+            'away.teamId': 'Team1',
+            'away.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal1',
+            #'away.rosterForCurrentScoringPeriod.entries': 'CurrentEntries1',
+            #'away.rosterForMatchupPeriod.entries': 'MatchupPeriodEntries1',
+            #'away.rosterForMatchupPeriodDelayed.entries': 'MatchupDelayedEntries1',
+            'away.cumulativeScore.scoreByStat': 'CurrentScore1',
+            'home.teamId': 'Team2',
+            'home.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal2',
+            #'home.rosterForCurrentScoringPeriod.entries': 'CurrentEntries2',
+            #'home.rosterForMatchupPeriod.entries': 'MatchupPeriodEntries2',
+            #'home.rosterForMatchupPeriodDelayed.entries': 'MatchupDelayedEntries2',
+            'home.cumulativeScore.scoreByStat': 'CurrentScore2',
+        }
+
+        team_column_names = {
+            'id': 'id',
+            'logo': 'Logo',
+            'name': 'Name',
+            'abbrev': 'Abbrev',
+            'record.overall.losses': 'Losses',
+            'record.overall.ties': 'Ties',
+            'record.overall.wins': 'Wins'
+        }
+
+        # Reindex based on column names defined above
+        matchup_df = matchup_df.reindex(columns=matchup_column_names).rename(
+            columns=matchup_column_names)
+        team_df = team_df.reindex(columns=team_column_names).rename(
+            columns=team_column_names)
+
+        # Add a new column for regular/playoff game based on week number
+        matchup_df['Type'] = ['Regular' if week <=
+                                14 else 'Playoff' for week in matchup_df['Week']]
+
+        team_df['Wins'] = team_df['Wins'].apply(str)
+        team_df['Losses'] = team_df['Losses'].apply(str)
+        team_df['Ties'] = team_df['Ties'].apply(str)
+        team_df['Record'] = team_df['Wins'] + '-' + team_df['Losses'] + '-' + team_df['Ties']
+
+        # Drop all columns except id and Name and Logo and Abbrev and Record
+        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Record'])
+
+        # (1) Rename Team1 column to id
+        matchup_df = matchup_df.rename(columns={"Team1": "id"})
+        
+        # (1) Merge DataFrames to get team names instead of ids and rename Name column to Name1
+        matchup_df = matchup_df.merge(team_df, on=['id'], how='left')
+        matchup_df = matchup_df.rename(columns={'Abbrev': 'Abbrev1'})
+        matchup_df = matchup_df.rename(columns={'Record': 'Record1'})
+        matchup_df = matchup_df.rename(columns={'Name': 'Name1'})
+        matchup_df = matchup_df.rename(columns={'Logo': 'Logo1'})
+
+        # (1) Drop the id column and reorder columns
+        matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentScore1',
+                                 'Team2', 'CurrentStatsTotal2', 'CurrentScore2', 'Type']]
+        #matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentEntries1', 'MatchupPeriodEntries1', 'MatchupDelayedEntries1', 'CurrentScore1',
+        #                         'Team2', 'CurrentStatsTotal2', 'CurrentEntries2', 'MatchupPeriodEntries2', 'MatchupDelayedEntries2', 'CurrentScore2', 'Type']]
+
+        # (2) Rename Team2 column to id
+        matchup_df = matchup_df.rename(columns={"Team2": "id"})
+
+        # (2) Merge DataFrames to get team names instead of ids and rename Name column to Name2
+        matchup_df = matchup_df.merge(team_df, on=['id'], how='left')
+        matchup_df = matchup_df.rename(columns={'Abbrev': 'Abbrev2'})
+        matchup_df = matchup_df.rename(columns={'Record': 'Record2'})
+        matchup_df = matchup_df.rename(columns={'Name': 'Name2'})
+        matchup_df = matchup_df.rename(columns={'Logo': 'Logo2'})
+
+        # (2) Drop the id column and reorder columns
+        matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentScore1',
+                                 'Logo2', 'Name2', 'Abbrev2', 'Record2', 'CurrentStatsTotal2', 'CurrentScore2', 'Type']]
+        #matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentEntries1', 'MatchupPeriodEntries1', 'MatchupDelayedEntries1', 'CurrentScore1',
+        #                        'Logo2', 'Name2', 'Abbrev2', 'Record2', 'CurrentStatsTotal2', 'CurrentEntries2', 'MatchupPeriodEntries2', 'MatchupDelayedEntries2', 'CurrentScore2', 'Type']]
+        
+        return matchup_df
