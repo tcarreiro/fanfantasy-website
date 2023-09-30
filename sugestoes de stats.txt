@@ -1,0 +1,15 @@
+Classificação:
+
+% um time que começou x-y-z nas primeiras (x+y+z) rodadas se classificou/não se classificou
+% um time que marcou N pontos até a rodada R se classificou/não se classificou
+% um time que tomou N pontos até a rodada R se classificou/não se classificou
+
+(Time / jogador) que (teve mais STAT / teve menos STAT / teve tal STAT) em (rodada/temporada/período)
+
+Ranking da sorte em todas as temporadas
+Ranking da sorte de cada temporada (inclusive atual)
+
+Quantos pontos cada time fez no total e média anual (por jogo)
+Quantos pontos cada time fez no total e média anual (por jogo)
+
+número de vitórias x pontos marcados total e média anual (por jogo)

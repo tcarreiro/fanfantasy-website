@@ -3,11 +3,17 @@ from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 import os
 
+#####################################################################################################
+### ESSA CLASSE GERENCIA O WEBSCRAPPING DO ESPN.COM, NÃO O API. PARA O API, VER ESPNFANFANTASY.PY ###
+#####################################################################################################
+
+# Código para desenvolvimento. Configurações de display do Pandas
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.set_option('display.max_rows', 800)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 
+# Listas e dicionários auxiliares
 teams_list = [
     'Atlanta Falcons',
     'Arizona Cardinals',
@@ -77,6 +83,9 @@ team_short = {
     'Tennessee Titans': 'ten',
     'Washington Commanders': 'wsh'
     }
+
+def get_teams_list():
+    return teams_list
 
 # helper function that makes a HTTP request over a list of players of a given team
 def make_team_list_request(team: str):
@@ -156,7 +165,7 @@ def get_defenses(draft_board_list) -> pd.DataFrame:
 # Lê e configura a tabela de rookies importada do Fantasy Pros
 def get_rookies_list() -> pd.DataFrame:
     # Rookies
-    rookies_list = pd.read_csv(os.getenv('DRAFT_LIST'))
+    rookies_list = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
     rookies_list['last_name'] = rookies_list['PLAYER NAME']
     rookies_list['profile_pic'] = ""
     rookies_list['rookie'] = True
@@ -183,7 +192,7 @@ def get_rookies_list() -> pd.DataFrame:
 
 # Board do fantasy pros REVISADO OK
 def get_fp_draft_board_list() -> pd.DataFrame:
-    draft_board_list = pd.read_csv(os.getenv('FP_BOARD_LIST'))
+    draft_board_list = pd.read_csv(os.getenv("csv_path")+os.getenv('FP_BOARD_LIST'))
     draft_board_list['last_name'] = draft_board_list['PLAYER NAME']
     draft_board_list['profile_pic'] = ""
     draft_board_list['rookie'] = False
@@ -225,13 +234,13 @@ def get_fa_list_from_board_list(draft_board_list) -> pd.DataFrame:
     return fa_list
 
 def get_draft_list() -> pd.DataFrame:
-    draft_list = pd.read_csv(os.getenv('DRAFT_LIST'))
+    draft_list = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
     draft_list.drop(draft_list.columns[0], axis=1, inplace=True)
     return draft_list
 
 # Cria a lista do draft pronta para ser usada (jogadores podem ser adicionados manualmente depois desse passo) REVISADO OK
 def create_draft_list(draft_board_reach):
-    players_list = pd.read_csv(os.getenv('PLAYERS_LIST'))
+    players_list = pd.read_csv(os.getenv("csv_path")+os.getenv('PLAYERS_LIST'))
     players_list.drop(players_list.columns[0], axis=1, inplace=True)
     draft_board_list = get_fp_draft_board_list()
     defense_list = get_defenses(draft_board_list)
@@ -291,7 +300,7 @@ def create_draft_list(draft_board_reach):
     draft_list = pd.concat([draft_list, add_empty_space(5)],ignore_index=True)
     # Concatena as etiquetas vazias com todos os jogadores listados pelo procedimento anterior
     draft_list = pd.concat([draft_list, defense_list],ignore_index=True)
-    draft_list.to_csv(os.getenv('DRAFT_LIST'))
+    draft_list.to_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
 
 def add_empty_space(count):
     valid_positions = ['QB', 'RB', 'WR', 'TE']
@@ -332,7 +341,7 @@ def get_bye_by_team(team, defense_list):
 
 # Adiciona jogadores manualmente à lista de draft pronta para uso REVISADO OK TODO CHECAR REPETIÇÃO 
 def add_player(profile_pic:str, first_name:str, last_name:str, team:str, position, is_rookie, draft_board_list):
-    draft_list = pd.read_csv(os.getenv('DRAFT_LIST'))
+    draft_list = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
     draft_list.drop(draft_list.columns[0], axis=1, inplace=True)
 
     added_players = {
@@ -359,10 +368,10 @@ def add_player(profile_pic:str, first_name:str, last_name:str, team:str, positio
     draft_list = pd.concat([draft_list, added_list])
     draft_list.reset_index(drop=True, inplace=True)
 
-    draft_list.to_csv(os.getenv('DRAFT_LIST'))
+    draft_list.to_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
 
 def update_player(id:int, profile_pic:str, first_name:str, last_name:str, team:str, position, is_rookie, draft_board_list):
-    draft_list = pd.read_csv(os.getenv('DRAFT_LIST'))
+    draft_list = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
     draft_list.drop(draft_list.columns[0], axis=1, inplace=True)
     defense_list = get_defenses(draft_board_list)
 
@@ -374,13 +383,13 @@ def update_player(id:int, profile_pic:str, first_name:str, last_name:str, team:s
     draft_list['rookie'][id] = is_rookie
     draft_list['bye'][id] = get_bye_by_team(team.replace(' ','_').lower(), defense_list)
 
-    draft_list.to_csv(os.getenv('DRAFT_LIST'))
+    draft_list.to_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
 
 def delete_player(id:int):
-    draft_list = pd.read_csv(os.getenv('DRAFT_LIST'))
+    draft_list = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
     draft_list.drop(draft_list.columns[0], axis=1, inplace=True)
     draft_list.drop([draft_list.index[id]], inplace=True)
-    draft_list.to_csv(os.getenv('DRAFT_LIST'))
+    draft_list.to_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
 
 # TODO não checa para possíveis jogadores com mesmo nome
 def is_player_on_a_team_two_names(player: str, players_team_list) -> bool:
@@ -390,5 +399,3 @@ def is_player_on_a_team_two_names(player: str, players_team_list) -> bool:
             resp = True
     return(resp)
 
-def get_teams_list():
-    return teams_list

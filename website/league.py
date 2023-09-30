@@ -28,121 +28,55 @@ def format_date(year=0, week=0):
         current_week=week
 
     return [current_week, weekday, current_year, time]
-def home():
-    print('Home carregada')
-    # League está como global. Se ainda não tiver sido definida, será na primeira vez que home for carregada (talvez seja necessário fazer esse check em todos os endpoints)
-    if not fetch.league:
-        fetch.league = fetch.connect_league(os.getenv("league_id"), 2023)
-        print('Conexão com API feita')
-    else:
-        print('Conexão já existia')
 
-    [current_week, weekday, current_year, time] = format_date()
+# Reimportar matchups
+def reimport_matchup_history_from_API(lastSeason):
+    # Zerar .csv atual
+    new_matchup_df = pd.DataFrame()
+    new_matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
 
-    if request.method == "GET":
-        matchup_data = fetch.league.get_schedule_data(week=current_week)
+    for season in range(2018,lastSeason+1):
+        fetch.league = fetch.connect_league(os.getenv("league_id"), season)
+        fetch.league.season_matchup_history_to_csv()
 
-    return [matchup_data, current_week, weekday, current_year, time]
+def get_matchup_by_week_season(week, season):
+    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
 
-def classificacao():
-    # League está como global. Se ainda não tiver sido definida, será na primeira vez que home for carregada (talvez seja necessário fazer esse check em todos os endpoints)
-    if not fetch.league:
-        fetch.league = fetch.connect_league(os.getenv("league_id"), 2023)
-        print('Conexão com API feita')
-    else:
-        print('Conexão já existia')
-
-    [current_week, weekday, current_year, time] = format_date()
-
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
-
-    if request.method == 'POST':
-        if (request.form.get('form_selector') == 'tabs'):
-            tab = request.form.get('action')
-            year = int(request.form.get('selected_season'))
-        elif (request.form.get('form_selector') == 'year'):
-            tab = request.form.get('standing_tab')
-            year = int(request.form.get('season'))
-        if (year != current_year):
-            [week, day, league_year, time] = format_date(year=year)
-        else:
-            league_year=current_year
-    else:
-        tab = 'group'
-        league_year = current_year
-
-    if tab == 'group':
-        teams_data = fetch.league.get_division_standings()
-    if tab == 'overall':
-        teams_data = fetch.league.get_overall_standings()
-
-    teams_data['%'] = teams_data['%'].round(3)
-    teams_data['PF'] = teams_data['PF'].round(1)
-    teams_data['PA'] = teams_data['PA'].round(1)
+    # Retirar todas as season não selecionadas
+    matchup_df.drop(matchup_df[matchup_df['Season'] != season].index, inplace=True)
+    # Retirar todas as semanas não selecionadas
+    matchup_df.drop(matchup_df[matchup_df['Week'] != week].index, inplace=True)
     
-    return [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year, time]
+    return matchup_df
 
-def fanfastats():
-    # League está como global. Se ainda não tiver sido definida, será na primeira vez que home for carregada (talvez seja necessário fazer esse check em todos os endpoints)
-    if not fetch.league:
-        fetch.league = fetch.connect_league(os.getenv("league_id"), 2023)
-        print('Conexão com API feita')
-    else:
-        print('Conexão já existia')
+# Essa função só será necessária caso eu queira importar o calendário inteiro da season em andamento e ir atualizando
+# A outra opção é importar apenas as já finalizadas e ir adicionando quando uma rodada acaba É ASSIM QUE ESTÁ NO MOMENTO
+#def att_matchup(id:int, profile_pic:str, first_name:str, last_name:str, team:str, position, is_rookie, draft_board_list):
+#    matchup_df = pd.read_csv(os.getenv("csv_path")+os.getenv('matchup_history'))
+#    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
 
-    [current_week, weekday, current_year, time] = format_date()
+#    matchup_df['profile_pic'][id] = profile_pic
+#    matchup_df['team'][id] = team.replace(' ','_').lower()
+#    matchup_df['position'][id] = position
+#    matchup_df['first_name'][id] = first_name
 
-    teams_data = fetch.league.get_division_standings()
-    if request.method=='POST':
-        texto=request.form.get('name')
-    else:
-        texto = 'Liga'
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
+#    matchup_df.to_csv(os.getenv("csv_path")+os.getenv('matchup_history'))
 
-    return [matchup_data, teams_data, current_year, current_week, weekday, time]
+# Reimportar standings
+def season_standings_history_to_csv(lastSeason):
+    # Zerar .csv atual
+    new_standings_df = pd.DataFrame()
+    new_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
 
-def rankings():
-    # League está como global. Se ainda não tiver sido definida, será na primeira vez que home for carregada (talvez seja necessário fazer esse check em todos os endpoints)
-    if not fetch.league:
-        fetch.league = fetch.connect_league(os.getenv("league_id"), 2023)
-        print('Conexão com API feita')
-    else:
-        print('Conexão já existia')
+    for season in range(2018,lastSeason+1):
+        fetch.league = fetch.connect_league(os.getenv("league_id"), season)
+        fetch.league.season_standings_history_to_csv()
 
-    [current_week, weekday, current_year, time] = format_date()
+def get_standing_from_season(season):
+    standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+    standings_df.drop(standings_df.columns[0], axis=1, inplace=True)
 
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
-
-    # Persistent handlers
-    if request.method == 'POST':
-        tab = 'rankings' # Put inside "if" in case more than 1 tab available
-        if (request.form.get('form_selector') == 'parameters_search'):
-            week = int(request.form.get('week'))
-            year = int(request.form.get('season'))
-        #elif for handling "tab" if needed
-        #elif (request.form.get('form_selector') == 'tabs'):
-        #    week = int(request.form.get('selected_week'))
-        #    year = int(request.form.get('selected_season'))
-        if (year != current_year or week != current_week):
-            [league_week, day, league_year, time] = format_date(year=year, week=week)
-            print('ok')
-            
-        else:
-            tab = 'rankings'
-            league_year=current_year
-            league_week=current_week
-    else:
-        # Initi default "tab"
-        tab = 'rankings'
-        league_year = current_year
-        league_week = current_week
-
-    # "tab" handlers and data acquisition
-    if tab == 'rankings':
-        teams_data = fetch.league.get_overall_standings()
-
-    teams_data['%'] = teams_data['%'].round(3)
-    teams_data['PF'] = teams_data['PF'].round(1)
-    teams_data['PA'] = teams_data['PA'].round(1)
-    
-    return [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year,league_week, time]
+    # Retirar todas as semanas que não estejam acabadas
+    standings_df.drop(standings_df[standings_df['Season'] != season].index, inplace=True)
+    return standings_df

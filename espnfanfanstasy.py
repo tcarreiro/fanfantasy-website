@@ -1,5 +1,7 @@
 import requests
 import pandas as pd
+import os
+import json
 
 class FantasyLeague:
     '''
@@ -216,7 +218,7 @@ class FantasyLeague:
 
         return self.df
     
-    def get_division_standings(self):
+    def season_standings_history_to_csv(self):
         # Pull team and matchup data from the URL
         team_response = requests.get(self.base_url,
                                         params={"leagueId": self.league_id,
@@ -228,6 +230,8 @@ class FantasyLeague:
         # Transform the response into a json
         team_json = team_response.json()
         team_df = pd.json_normalize(team_json['teams'])
+
+        team_df.to_csv(os.getenv('csv_path')+'teams_df.csv')
 
         team_column_names = {
                 'id': 'id',
@@ -246,7 +250,10 @@ class FantasyLeague:
         team_df = team_df.reindex(columns=team_column_names).rename(
             columns=team_column_names)
         
-        team_df = team_df[['id', 'Division', 'Logo', 'Name', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA']]
+        # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
+        team_df['Season'] = self.year
+        
+        team_df = team_df[['Season', 'id', 'Division', 'Logo', 'Name', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA']]
         team_df = team_df.sort_values(by=['Division', '%', 'PF'], ascending=[True, False, False])
         team_df.reset_index(drop=True, inplace=True)
 
@@ -403,11 +410,8 @@ class FantasyLeague:
                                      'Score1', 'Logo2', 'Name2', 'Abbrev2', 'Record2', 'Score2', 'Type']]
             
             # Add info if matchup was already played
-
             matchup_df.drop(matchup_df[matchup_df['Week'] != week].index, inplace=True)
             all_matchup_data.append(matchup_df)
-
-        
 
         self.matchup_df = pd.concat(all_matchup_data, ignore_index=True)
 
@@ -455,21 +459,21 @@ class FantasyLeague:
 
         return standings_df
     
+    # Retorna a DataFrame das matchups de uma Semana específica do ano que está conectado {{self.year}}
+    # TODO só retorna os valores temporários de uma matchup, portanto só serve para retornar os jogos em andamento
     def get_current_scores(self, week):
-        #week = week-1 # TODO Identificação da semana precisa desse -1?
-
         # Pull team and matchup data from the URL
         matchup_response = requests.get(self.base_url,
                                         params={"leagueId": self.league_id,
                                                 "seasonId": self.year,
-                                                "matchupPeriodId": week,
+                                                "matchupPeriodId": 1,
                                                 "view": "mMatchup"},
                                         cookies=self.cookies)
 
         team_response = requests.get(self.base_url,
                                         params={"leagueId": self.league_id,
                                                 "seasonId": self.year,
-                                                "matchupPeriodId": week,
+                                                "matchupPeriodId": 1,
                                                 "view": "mTeam"},
                                         cookies=self.cookies)
 
@@ -489,16 +493,12 @@ class FantasyLeague:
             'matchupPeriodId': 'Week',
             'away.teamId': 'Team1',
             'away.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal1',
-            #'away.rosterForCurrentScoringPeriod.entries': 'CurrentEntries1',
-            #'away.rosterForMatchupPeriod.entries': 'MatchupPeriodEntries1',
-            #'away.rosterForMatchupPeriodDelayed.entries': 'MatchupDelayedEntries1',
-            'away.cumulativeScore.scoreByStat': 'CurrentScore1',
+            #'away.rosterForCurrentScoringPeriod.entries': 'CurrentEntries1', # Para o futuro
+            'away.totalPoints': 'Score1',
             'home.teamId': 'Team2',
             'home.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal2',
-            #'home.rosterForCurrentScoringPeriod.entries': 'CurrentEntries2',
-            #'home.rosterForMatchupPeriod.entries': 'MatchupPeriodEntries2',
-            #'home.rosterForMatchupPeriodDelayed.entries': 'MatchupDelayedEntries2',
-            'home.cumulativeScore.scoreByStat': 'CurrentScore2',
+            #'home.rosterForCurrentScoringPeriod.entries': 'CurrentEntries2', # Para o futuro
+            'home.totalPoints': 'Score2',
         }
 
         team_column_names = {
@@ -511,54 +511,251 @@ class FantasyLeague:
             'record.overall.wins': 'Wins'
         }
 
-        # Reindex based on column names defined above
+        # Alterar nomes das colunas
         matchup_df = matchup_df.reindex(columns=matchup_column_names).rename(
             columns=matchup_column_names)
         team_df = team_df.reindex(columns=team_column_names).rename(
             columns=team_column_names)
 
-        # Add a new column for regular/playoff game based on week number
+        # Adiciona a coluna com o tipo da matchup (temporada regular ou playoff)
         matchup_df['Type'] = ['Regular' if week <=
                                 14 else 'Playoff' for week in matchup_df['Week']]
+        
+        # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
+        matchup_df['Season'] = self.year
 
-        team_df['Wins'] = team_df['Wins'].apply(str)
-        team_df['Losses'] = team_df['Losses'].apply(str)
-        team_df['Ties'] = team_df['Ties'].apply(str)
-        team_df['Record'] = team_df['Wins'] + '-' + team_df['Losses'] + '-' + team_df['Ties']
+        # Retira todas as colunas do DataFrame, exceto as listadas
+        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties'])
 
-        # Drop all columns except id and Name and Logo and Abbrev and Record
-        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Record'])
-
-        # (1) Rename Team1 column to id
+        # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.rename(columns={"Team1": "id"})
         
-        # (1) Merge DataFrames to get team names instead of ids and rename Name column to Name1
+        # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.merge(team_df, on=['id'], how='left')
         matchup_df = matchup_df.rename(columns={'Abbrev': 'Abbrev1'})
-        matchup_df = matchup_df.rename(columns={'Record': 'Record1'})
+        matchup_df = matchup_df.rename(columns={'Wins': 'Wins1'})
+        matchup_df = matchup_df.rename(columns={'Losses': 'Losses1'})
+        matchup_df = matchup_df.rename(columns={'Ties': 'Ties1'})
         matchup_df = matchup_df.rename(columns={'Name': 'Name1'})
         matchup_df = matchup_df.rename(columns={'Logo': 'Logo1'})
 
-        # (1) Drop the id column and reorder columns
-        matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentScore1',
-                                 'Team2', 'CurrentStatsTotal2', 'CurrentScore2', 'Type']]
-        #matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentEntries1', 'MatchupPeriodEntries1', 'MatchupDelayedEntries1', 'CurrentScore1',
-        #                         'Team2', 'CurrentStatsTotal2', 'CurrentEntries2', 'MatchupPeriodEntries2', 'MatchupDelayedEntries2', 'CurrentScore2', 'Type']]
+        # (1) Reordena as colunas após a primeira mescla
+        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
+                                 'Team2', 'Score2', 'CurrentStatsTotal2', 'Type']]
 
-        # (2) Rename Team2 column to id
+        # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.rename(columns={"Team2": "id"})
 
-        # (2) Merge DataFrames to get team names instead of ids and rename Name column to Name2
+        # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.merge(team_df, on=['id'], how='left')
         matchup_df = matchup_df.rename(columns={'Abbrev': 'Abbrev2'})
-        matchup_df = matchup_df.rename(columns={'Record': 'Record2'})
+        matchup_df = matchup_df.rename(columns={'Wins': 'Wins2'})
+        matchup_df = matchup_df.rename(columns={'Losses': 'Losses2'})
+        matchup_df = matchup_df.rename(columns={'Ties': 'Ties2'})
         matchup_df = matchup_df.rename(columns={'Name': 'Name2'})
         matchup_df = matchup_df.rename(columns={'Logo': 'Logo2'})
 
-        # (2) Drop the id column and reorder columns
-        matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentScore1',
-                                 'Logo2', 'Name2', 'Abbrev2', 'Record2', 'CurrentStatsTotal2', 'CurrentScore2', 'Type']]
-        #matchup_df = matchup_df[['Week', 'Logo1', 'Name1', 'Abbrev1', 'Record1', 'CurrentStatsTotal1', 'CurrentEntries1', 'MatchupPeriodEntries1', 'MatchupDelayedEntries1', 'CurrentScore1',
-        #                        'Logo2', 'Name2', 'Abbrev2', 'Record2', 'CurrentStatsTotal2', 'CurrentEntries2', 'MatchupPeriodEntries2', 'MatchupDelayedEntries2', 'CurrentScore2', 'Type']]
+        # (2) Reordena as colunas após a segunda mescla
+        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
+                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'Type']]
         
         return matchup_df
+    
+    # Adiciona uma matchup_df no fim do .csv (atenção à formatação!)
+    def add_matchup_to_csv(self, week_matchup_df):
+        # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
+        cur_matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+        cur_matchup_df.drop(cur_matchup_df.columns[0], axis=1, inplace=True)
+
+        # Concatenar resultado com o backup do arquivo e redefinir os IDs
+        cur_matchup_df = pd.concat([cur_matchup_df, week_matchup_df])
+        cur_matchup_df.reset_index(drop=True, inplace=True)
+        
+        # Salvar dados no arquivo
+        cur_matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+
+    # Adiciona os standings no fim do .csv (atenção à formatação! e se é necessário apagar as infos da mesma season antes de atualizar)
+    def add_standings_to_csv(self, week_standings_df):
+        # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
+        cur_standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+        cur_standings_df.drop(cur_standings_df.columns[0], axis=1, inplace=True)
+
+        # Concatenar resultado com o backup do arquivo e redefinir os IDs
+        cur_standings_df = pd.concat([cur_standings_df, week_standings_df])
+        cur_standings_df.reset_index(drop=True, inplace=True)
+        
+        # Salvar dados no arquivo
+        cur_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+
+    # Adiciona ao CSV todas as partidas já finalizadas da season conectada {{self.year}}
+    def season_matchup_history_to_csv(self):
+        # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
+        cur_matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+        cur_matchup_df.drop(cur_matchup_df.columns[0], axis=1, inplace=True)
+
+        matchup_response = requests.get(self.base_url,
+                                    params={"leagueId": self.league_id,
+                                            "seasonId": self.year,
+                                            "matchupPeriodId": 1,
+                                            "view": "mMatchup"},
+                                    cookies=self.cookies)
+        
+        team_response = requests.get(self.base_url,
+                                        params={"leagueId": self.league_id,
+                                                "seasonId": self.year,
+                                                "matchupPeriodId": 1,
+                                                "view": "mTeam"},
+                                        cookies=self.cookies)
+        
+        # Transforma a resposta em json
+        matchup_json = matchup_response.json()
+        team_json = team_response.json()
+
+        # Transforma os json em DataFrame
+        matchup_df = pd.json_normalize(matchup_json['schedule'])
+        team_df = pd.json_normalize(team_json['teams'])
+
+        # Retirar todas as semanas que não estejam acabadas
+        matchup_df.drop(matchup_df[matchup_df['winner'] == "UNDECIDED"].index, inplace=True)
+
+        # Define the column names needed
+        matchup_column_names = {
+            'matchupPeriodId': 'Week',
+            'away.teamId': 'Team1',
+            'away.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal1',
+            #'away.rosterForCurrentScoringPeriod.entries': 'CurrentEntries1', # Para o futuro
+            'away.totalPoints': 'Score1',
+            'home.teamId': 'Team2',
+            'home.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal2',
+            #'home.rosterForCurrentScoringPeriod.entries': 'CurrentEntries2', # Para o futuro
+            'home.totalPoints': 'Score2',
+        }
+
+        team_column_names = {
+            'id': 'id',
+            'logo': 'Logo',
+            'name': 'Name',
+            'abbrev': 'Abbrev',
+            'record.overall.losses': 'Losses',
+            'record.overall.ties': 'Ties',
+            'record.overall.wins': 'Wins',
+        }
+
+        # Alterar nomes das colunas
+        matchup_df = matchup_df.reindex(columns=matchup_column_names).rename(
+            columns=matchup_column_names)
+        team_df = team_df.reindex(columns=team_column_names).rename(
+            columns=team_column_names)
+
+        # Adiciona a coluna com o tipo da matchup (temporada regular ou playoff)
+        matchup_df['Type'] = ['Regular' if week <=
+                                14 else 'Playoff' for week in matchup_df['Week']]
+        
+        # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
+        matchup_df['Season'] = self.year
+
+        # Retira todas as colunas do DataFrame, exceto as listadas
+        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties'])
+
+        # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
+        matchup_df = matchup_df.rename(columns={"Team1": "id"})
+        
+        # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
+        matchup_df = matchup_df.merge(team_df, on=['id'], how='left')
+        matchup_df = matchup_df.rename(columns={'Abbrev': 'Abbrev1'})
+        matchup_df = matchup_df.rename(columns={'Wins': 'Wins1'})
+        matchup_df = matchup_df.rename(columns={'Losses': 'Losses1'})
+        matchup_df = matchup_df.rename(columns={'Ties': 'Ties1'})
+        matchup_df = matchup_df.rename(columns={'Name': 'Name1'})
+        matchup_df = matchup_df.rename(columns={'Logo': 'Logo1'})
+
+        # (1) Reordena as colunas após a primeira mescla
+        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
+                                 'Team2', 'Score2', 'CurrentStatsTotal2', 'Type']]
+
+        # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
+        matchup_df = matchup_df.rename(columns={"Team2": "id"})
+
+        # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
+        matchup_df = matchup_df.merge(team_df, on=['id'], how='left')
+        matchup_df = matchup_df.rename(columns={'Abbrev': 'Abbrev2'})
+        matchup_df = matchup_df.rename(columns={'Wins': 'Wins2'})
+        matchup_df = matchup_df.rename(columns={'Losses': 'Losses2'})
+        matchup_df = matchup_df.rename(columns={'Ties': 'Ties2'})
+        matchup_df = matchup_df.rename(columns={'Name': 'Name2'})
+        matchup_df = matchup_df.rename(columns={'Logo': 'Logo2'})
+
+        # (2) Reordena as colunas após a segunda mescla
+        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
+                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'Type']]
+        
+        # Concatenar resultado com o backup do arquivo e redefinir os IDs
+        cur_matchup_df = pd.concat([cur_matchup_df, matchup_df])
+        cur_matchup_df.reset_index(drop=True, inplace=True)
+        
+        # Salvar dados no arquivo
+        cur_matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+
+    def season_standings_history_to_csv(self):
+        # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
+        cur_standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+        cur_standings_df.drop(cur_standings_df.columns[0], axis=1, inplace=True)
+
+        # Pull team and matchup data from the URL
+        team_response = requests.get(self.base_url,
+                                        params={"leagueId": self.league_id,
+                                                "seasonId": self.year,
+                                                "matchupPeriodId": 1,
+                                                "view": "mTeam"},
+                                        cookies=self.cookies)
+        
+        # Transforma a resposta em json
+        team_json = team_response.json()
+
+        # Transforma os json em DataFrame
+        team_df = pd.json_normalize(team_json['teams'])
+
+        team_column_names = {
+            'id': 'id',
+            'logo': 'Logo',
+            'name': 'Name',
+            'divisionId': 'Division',
+            'playoffSeed': 'Seed',
+            'abbrev': 'Abbrev',
+            'record.overall.losses': 'Losses',
+            'record.overall.ties': 'Ties',
+            'record.overall.wins': 'Wins',
+            'record.overall.percentage': '%',
+            'record.overall.pointsAgainst': 'PA',
+            'record.overall.pointsFor': 'PF',
+        }
+
+        # Alterar nomes das colunas
+        team_df = team_df.reindex(columns=team_column_names).rename(
+            columns=team_column_names)
+
+        # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
+        team_df['Season'] = self.year
+
+        team_df = team_df[['Season', 'id', 'Division', 'Logo', 'Name', 'Abbrev', 'Seed', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA']]
+
+        # Concatenar resultado com o backup do arquivo e redefinir os IDs
+        cur_standings_df = pd.concat([cur_standings_df, team_df])
+        cur_standings_df.reset_index(drop=True, inplace=True)
+        
+        #team_df = team_df.sort_values(by=['Division', '%', 'PF'], ascending=[True, False, False])
+        #team_df.reset_index(drop=True, inplace=True)
+
+        # Salvar dados no arquivo
+        cur_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+
+
+    # Controle de atualização dos standings e resultados da rodada. Deverá ser usado no controle de quando as DataFrames serão atualizadas
+    def att_control_panel(week):
+        control_panel_df = pd.read_csv(os.getenv('csv_path')+os.getenv('control_panel'))
+        control_panel_df.drop(control_panel_df.columns[0], axis=1, inplace=True)
+
+        control_panel_df['last_standing_update_week'][0] = week
+        control_panel_df['last_matchup_update_week'][0] = week
+
+        control_panel_df.to_csv(os.getenv("csv_path")+os.getenv('control_panel'))

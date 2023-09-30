@@ -20,7 +20,12 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    [matchup_data, current_week, weekday, current_year, time] = league.home()
+    [current_week, weekday, current_year, time] = league.format_date()
+    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
+
+    matchup_data = fetch.league.get_schedule_data(week=current_week)
+    #if request.method == "GET":
+
     return render_template("home.html", current_week=current_week, current_year=current_year, weekday=weekday, hour=time.hour, matchup_data=matchup_data)
 
 @views.route('/update_match_strip', methods=['POST'])
@@ -37,19 +42,101 @@ def requestMatchupESPN():
 
 @views.route('/classificacao', methods=['GET', 'POST'])
 def classificacao():
-    [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year, time] = league.classificacao()
+    [current_week, weekday, current_year, time] = league.format_date()
+    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
+
+    matchup_data = fetch.league.get_schedule_data(week=current_week)
+    teams_data = league.get_standing_from_season(current_year)
+
+    # Selecionando Tab e season para obtenção dos dados
+    if request.method == 'POST':
+        if (request.form.get('form_selector') == 'tabs'):
+            tab = request.form.get('action')
+            year = int(request.form.get('selected_season'))
+        elif (request.form.get('form_selector') == 'year'):
+            tab = request.form.get('standing_tab')
+            year = int(request.form.get('season'))
+        if (year != current_year):
+            teams_data = league.get_standing_from_season(year)
+            [week, day, league_year, time] = league.format_date(year=year)
+        else:
+            league_year=current_year
+    else:
+        tab = 'group'
+        league_year = current_year
+
+    # Ordenar standings de acordo com a aba selecionada
+    if tab == 'group':
+        teams_data = teams_data.sort_values(by=['Division', 'Seed'], ascending=[True, True])
+        teams_data.reset_index(drop=True, inplace=True)
+        #teams_data = fetch.league.get_division_standings()
+    if tab == 'overall':
+        teams_data = teams_data.sort_values(by=['Seed'], ascending=[True])
+        teams_data.reset_index(drop=True, inplace=True)
+        #teams_data = fetch.league.get_overall_standings()
+
+    # Configuração arredondamentos
+    teams_data['%'] = teams_data['%'].round(3)
+    teams_data['PF'] = teams_data['PF'].round(1)
+    teams_data['PA'] = teams_data['PA'].round(1)
+
     return render_template("classificacao.html", matchup_data=matchup_data, teams_data=teams_data,
                            tab=tab, current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)
 
 @views.route('/fanfastats', methods=['GET', 'POST'])
 def fanfastats():
-    [matchup_data, teams_data, current_year, current_week, weekday, time] = league.fanfastats()
+    [current_week, weekday, current_year, time] = league.format_date()
+    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
+
+    matchup_data = fetch.league.get_schedule_data(week=current_week)
+    teams_data = league.get_standing_from_season(current_year)
+    if request.method=='POST':
+        texto=request.form.get('name')
+    else:
+        texto = 'Liga'
+    
     return render_template("fanfastats.html", matchup_data=matchup_data, teams_data=teams_data,
                            current_year=current_year, current_week=current_week, weekday=weekday, hour=time.hour)
 
 @views.route('/rankings', methods=['GET', 'POST'])
 def rankings():
-    [matchup_data, teams_data, tab, current_year, current_week, weekday, league_year,league_week, time] = league.rankings() 
+    [current_week, weekday, current_year, time] = league.format_date()
+    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
+
+    matchup_data = fetch.league.get_schedule_data(week=current_week)
+
+    # Persistent handlers
+    if request.method == 'POST':
+        tab = 'rankings' # Put inside "if" in case more than 1 tab available
+        if (request.form.get('form_selector') == 'parameters_search'):
+            week = int(request.form.get('week'))
+            year = int(request.form.get('season'))
+        #elif for handling "tab" if needed
+        #elif (request.form.get('form_selector') == 'tabs'):
+        #    week = int(request.form.get('selected_week'))
+        #    year = int(request.form.get('selected_season'))
+        if (year != current_year or week != current_week):
+            [league_week, day, league_year, time] = league.format_date(year=year, week=week)
+            print('ok')
+            
+        else:
+            tab = 'rankings'
+            league_year=current_year
+            league_week=current_week
+    else:
+        # Initi default "tab"
+        tab = 'rankings'
+        league_year = current_year
+        league_week = current_week
+
+    # "tab" handlers and data acquisition
+    if tab == 'rankings':
+        teams_data = league.get_standing_from_season(league_year)
+
+    teams_data['%'] = teams_data['%'].round(3)
+    teams_data['PF'] = teams_data['PF'].round(1)
+    teams_data['PA'] = teams_data['PA'].round(1)
+
     return render_template("rankings.html", matchup_data=matchup_data, teams_data=teams_data, tab=tab,
                            current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, league_week=league_week, hour=time.hour)
 
