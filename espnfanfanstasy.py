@@ -460,8 +460,7 @@ class FantasyLeague:
         return standings_df
     
     # Retorna a DataFrame das matchups de uma Semana específica do ano que está conectado {{self.year}}
-    # TODO só retorna os valores temporários de uma matchup, portanto só serve para retornar os jogos em andamento
-    def get_current_scores(self, week):
+    def get_matchup_data_by_week(self, week):
         # Pull team and matchup data from the URL
         matchup_response = requests.get(self.base_url,
                                         params={"leagueId": self.league_id,
@@ -573,19 +572,6 @@ class FantasyLeague:
         
         # Salvar dados no arquivo
         cur_matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
-
-    # Adiciona os standings no fim do .csv (atenção à formatação! e se é necessário apagar as infos da mesma season antes de atualizar)
-    def add_standings_to_csv(self, week_standings_df):
-        # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
-        cur_standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
-        cur_standings_df.drop(cur_standings_df.columns[0], axis=1, inplace=True)
-
-        # Concatenar resultado com o backup do arquivo e redefinir os IDs
-        cur_standings_df = pd.concat([cur_standings_df, week_standings_df])
-        cur_standings_df.reset_index(drop=True, inplace=True)
-        
-        # Salvar dados no arquivo
-        cur_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
 
     # Adiciona ao CSV todas as partidas já finalizadas da season conectada {{self.year}}
     def season_matchup_history_to_csv(self):
@@ -743,19 +729,6 @@ class FantasyLeague:
         cur_standings_df = pd.concat([cur_standings_df, team_df])
         cur_standings_df.reset_index(drop=True, inplace=True)
         
-        #team_df = team_df.sort_values(by=['Division', '%', 'PF'], ascending=[True, False, False])
-        #team_df.reset_index(drop=True, inplace=True)
-
         # Salvar dados no arquivo
         cur_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
 
-
-    # Controle de atualização dos standings e resultados da rodada. Deverá ser usado no controle de quando as DataFrames serão atualizadas
-    def att_control_panel(week):
-        control_panel_df = pd.read_csv(os.getenv('csv_path')+os.getenv('control_panel'))
-        control_panel_df.drop(control_panel_df.columns[0], axis=1, inplace=True)
-
-        control_panel_df['last_standing_update_week'][0] = week
-        control_panel_df['last_matchup_update_week'][0] = week
-
-        control_panel_df.to_csv(os.getenv("csv_path")+os.getenv('control_panel'))

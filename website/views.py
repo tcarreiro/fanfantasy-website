@@ -11,8 +11,9 @@ views = Blueprint('views', __name__)
 
 
 ##############################
-##### ROUTES
+##### HELPERS
 ##############################
+
 
 ##############################
 ##### LEAGUE
@@ -23,6 +24,7 @@ def home():
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
+    fetch.league.add_matchup_to_csv(fetch.league.get_matchup_data_by_week(week=current_week-1))
     matchup_data = fetch.league.get_schedule_data(week=current_week)
     #if request.method == "GET":
 
@@ -36,7 +38,7 @@ def requestMatchupESPN():
     current_year = int(request.form.get('current_year'))
     request.form.get('hour')
     hour = int(request.form.get('hour'))
-    matchup_data = fetch.league.get_current_scores(week=current_week)
+    matchup_data = fetch.league.get_matchup_data_by_week(week=current_week)
     return jsonify({'data': render_template("match_strip.html", current_week=current_week, weekday=weekday, current_year=current_year, hour=hour, matchup_data=matchup_data)})
     
 
@@ -46,7 +48,7 @@ def classificacao():
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
     matchup_data = fetch.league.get_schedule_data(week=current_week)
-    teams_data = league.get_standing_from_season(current_year)
+    teams_data = league.get_standings_from_season(current_year)
 
     # Selecionando Tab e season para obtenção dos dados
     if request.method == 'POST':
@@ -57,7 +59,7 @@ def classificacao():
             tab = request.form.get('standing_tab')
             year = int(request.form.get('season'))
         if (year != current_year):
-            teams_data = league.get_standing_from_season(year)
+            teams_data = league.get_standings_from_season(year)
             [week, day, league_year, time] = league.format_date(year=year)
         else:
             league_year=current_year
@@ -89,7 +91,7 @@ def fanfastats():
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
     matchup_data = fetch.league.get_schedule_data(week=current_week)
-    teams_data = league.get_standing_from_season(current_year)
+    teams_data = league.get_standings_from_season(current_year)
     if request.method=='POST':
         texto=request.form.get('name')
     else:
@@ -131,7 +133,7 @@ def rankings():
 
     # "tab" handlers and data acquisition
     if tab == 'rankings':
-        teams_data = league.get_standing_from_season(league_year)
+        teams_data = league.get_standings_from_season(league_year)
 
     teams_data['%'] = teams_data['%'].round(3)
     teams_data['PF'] = teams_data['PF'].round(1)
