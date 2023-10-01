@@ -14,6 +14,8 @@ def check_if_update_needed(current_week, current_year):
         delete_standings_from_season(current_year)
         fetch.league.season_standings_history_to_csv()
         fetch.league.add_matchup_to_csv(fetch.league.get_matchup_data_by_week(week=current_week-1))
+        att_expected_wins_by_season_by_week(season=current_year, week=current_week-1)
+        att_expected_wins_by_season(season=current_year)
 
         att_control_panel(week=current_week-1)
 
@@ -63,19 +65,6 @@ def get_matchup_by_week_season(week, season):
     
     return matchup_df
 
-# Essa função só será necessária caso eu queira importar o calendário inteiro da season em andamento e ir atualizando
-# A outra opção é importar apenas as já finalizadas e ir adicionando quando uma rodada acaba É ASSIM QUE ESTÁ NO MOMENTO
-#def att_matchup(id:int, profile_pic:str, first_name:str, last_name:str, team:str, position, is_rookie, draft_board_list):
-#    matchup_df = pd.read_csv(os.getenv("csv_path")+os.getenv('matchup_history'))
-#    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
-
-#    matchup_df['profile_pic'][id] = profile_pic
-#    matchup_df['team'][id] = team.replace(' ','_').lower()
-#    matchup_df['position'][id] = position
-#    matchup_df['first_name'][id] = first_name
-
-#    matchup_df.to_csv(os.getenv("csv_path")+os.getenv('matchup_history'))
-
 # Reimportar standings
 def reimport_standings_history_from_API(lastSeason):
     # Zerar .csv atual
@@ -117,3 +106,72 @@ def att_control_panel(week):
     control_panel_df['last_matchup_update_week'][0] = week
 
     control_panel_df.to_csv(os.getenv("csv_path")+os.getenv('control_panel'))
+
+def att_expected_wins_by_season_by_week(season, week):
+    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
+    aux_matchup_df = matchup_df.copy()
+    
+    # Retirar todas as temporadas que não sejam a atual
+    aux_matchup_df.drop(aux_matchup_df[aux_matchup_df['Season'] != season].index, inplace=True)
+    aux_matchup_df.drop(aux_matchup_df[aux_matchup_df['Week'] != week].index, inplace=True)
+    aux_matchup_df.reset_index(drop=True, inplace=True)
+
+    # Ranquear pontuações da rodada e transformar em vitórias esperadas
+    score_df = pd.DataFrame(columns=['Score1'])
+    score_df['Score1'] = aux_matchup_df['Score1']
+    score_df2 = pd.DataFrame(columns=['Score1'])
+    score_df2['Score1'] = aux_matchup_df['Score2']
+    score_df = pd.concat([score_df,score_df2], axis=0, ignore_index=True)
+    score_df['Score1'] = score_df.rank(ascending=False, method='min')
+    for i in range(0, int(len(score_df)/2)):
+        aux_matchup_df['ExpectedWins1'][i]=((len(score_df))-score_df['Score1'][i])/(len(score_df)-1)
+        aux_matchup_df['ExpectedWins2'][i]=((len(score_df))-score_df['Score1'][i+len(score_df)/2])/(len(score_df)-1)
+    
+    # Apagar infos na df original
+    matchup_df.drop(matchup_df[(matchup_df['Season'] == season) & (matchup_df['Week'] == week)].index, inplace=True)
+
+    # Concatenar resultado com o backup do arquivo e redefinir os IDs
+    matchup_df = pd.concat([matchup_df, aux_matchup_df])
+    matchup_df = matchup_df.sort_values(by=['Season', 'Week'], ascending=[True, True])
+    matchup_df.reset_index(drop=True, inplace=True)
+    
+    # Salvar dados no arquivo
+    matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    
+def att_expected_wins_by_season(season):
+    standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+    standings_df.drop(standings_df.columns[0], axis=1, inplace=True)
+    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
+    aux_standings_df = standings_df.copy()
+    aux_matchup_df = matchup_df.copy()
+    
+    # Retirar todas as temporadas que não sejam a atual
+    aux_matchup_df.drop(aux_matchup_df[aux_matchup_df['Season'] != season].index, inplace=True)
+    aux_matchup_df.reset_index(drop=True, inplace=True)
+
+    # Retirar todas as temporadas que não sejam a atual
+    aux_standings_df.drop(aux_standings_df[aux_standings_df['Season'] != season].index, inplace=True)
+    aux_standings_df.reset_index(drop=True, inplace=True)
+
+    for team in range(0, len(aux_standings_df)):
+        aux_standings_df['ExpectedWins'][team] = 0
+        for match in range(0, len(aux_matchup_df)):
+            if (aux_matchup_df['Type'][match] == 'Regular'):
+                if (aux_standings_df['Name'][team] == aux_matchup_df['Name1'][match]):
+                    aux_standings_df['ExpectedWins'][team] = aux_standings_df['ExpectedWins'][team] + aux_matchup_df['ExpectedWins1'][match]
+                if (aux_standings_df['Name'][team] == aux_matchup_df['Name2'][match]):
+                    aux_standings_df['ExpectedWins'][team] = aux_standings_df['ExpectedWins'][team] + aux_matchup_df['ExpectedWins2'][match]
+    
+    # Apagar infos na df original
+    standings_df.drop(standings_df[standings_df['Season'] == season].index, inplace=True)
+
+    # Concatenar resultado com o backup do arquivo e redefinir os IDs
+    standings_df = pd.concat([standings_df, aux_standings_df])
+    standings_df = standings_df.sort_values(by=['Season', 'id'], ascending=[True, True])
+    standings_df.reset_index(drop=True, inplace=True)
+    
+
+    # Salvar dados no arquivo
+    standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))

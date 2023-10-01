@@ -24,7 +24,13 @@ def home():
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
-    fetch.league.add_matchup_to_csv(fetch.league.get_matchup_data_by_week(week=current_week-1))
+    #league.reimport_matchup_history_from_API(2023)
+    #league.reimport_standings_history_from_API(2023)
+    #for season in range(2021,2023):
+    #for week in range(1,4):
+    #league.att_expected_wins_by_season_by_week(season=2023, week=4)
+    #for season in range(2018,2024):
+    #    league.att_expected_wins_by_season(season)
     matchup_data = fetch.league.get_schedule_data(week=current_week)
     #if request.method == "GET":
 
@@ -38,6 +44,7 @@ def requestMatchupESPN():
     current_year = int(request.form.get('current_year'))
     request.form.get('hour')
     hour = int(request.form.get('hour'))
+    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
     matchup_data = fetch.league.get_matchup_data_by_week(week=current_week)
     return jsonify({'data': render_template("match_strip.html", current_week=current_week, weekday=weekday, current_year=current_year, hour=hour, matchup_data=matchup_data)})
     
@@ -106,41 +113,35 @@ def rankings():
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
     matchup_data = fetch.league.get_schedule_data(week=current_week)
+    teams_data = league.get_standings_from_season(current_year)
 
-    # Persistent handlers
+    # Selecionando Tab e season para obtenção dos dados
     if request.method == 'POST':
-        tab = 'rankings' # Put inside "if" in case more than 1 tab available
-        if (request.form.get('form_selector') == 'parameters_search'):
-            week = int(request.form.get('week'))
+        if (request.form.get('form_selector') == 'year'):
             year = int(request.form.get('season'))
-        #elif for handling "tab" if needed
-        #elif (request.form.get('form_selector') == 'tabs'):
-        #    week = int(request.form.get('selected_week'))
-        #    year = int(request.form.get('selected_season'))
-        if (year != current_year or week != current_week):
-            [league_week, day, league_year, time] = league.format_date(year=year, week=week)
-            print('ok')
-            
+        if (year != current_year):
+            teams_data = league.get_standings_from_season(year)
+            [week, day, league_year, time] = league.format_date(year=year)
         else:
-            tab = 'rankings'
             league_year=current_year
-            league_week=current_week
     else:
-        # Initi default "tab"
-        tab = 'rankings'
         league_year = current_year
-        league_week = current_week
 
-    # "tab" handlers and data acquisition
-    if tab == 'rankings':
-        teams_data = league.get_standings_from_season(league_year)
+    teams_data['deltaWins'] = teams_data['Wins'] - teams_data['ExpectedWins']
 
+    # Ordenar standings de acordo com a aba selecionada
+    teams_data = teams_data.sort_values(by=['deltaWins'], ascending=[True])
+    teams_data.reset_index(drop=True, inplace=True)
+
+    # Configuração arredondamentos
     teams_data['%'] = teams_data['%'].round(3)
     teams_data['PF'] = teams_data['PF'].round(1)
     teams_data['PA'] = teams_data['PA'].round(1)
+    teams_data['ExpectedWins'] = teams_data['ExpectedWins'].round(3)
+    teams_data['deltaWins'] = teams_data['deltaWins'].round(3)
 
-    return render_template("rankings.html", matchup_data=matchup_data, teams_data=teams_data, tab=tab,
-                           current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, league_week=league_week, hour=time.hour)
+    return render_template("rankings.html", matchup_data=matchup_data, teams_data=teams_data,
+                           current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)
 
 ##############################
 ##### DRAFTS

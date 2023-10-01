@@ -1,97 +1,97 @@
-,Season,id,Division,Logo,Name,Abbrev,Seed,Wins,Losses,Ties,%,PF,PA
-0,2018,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,4,9,4,0,0.6923076923076923,1186.9,1017.0
-1,2018,2,3,http://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,3,9,4,0,0.6923076923076923,1293.5,998.2
-2,2018,3,3,http://i64.tinypic.com/2qbgf3t.png,Recife Eulers,JOAO,9,7,6,0,0.5384615384615384,1083.8,1199.6
-3,2018,4,2,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,8,7,6,0,0.5384615384615384,1147.6,1074.8
-4,2018,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,16,2,11,0,0.1538461538461538,774.5,1045.6
-5,2018,7,1,http://i63.tinypic.com/dpx2ck.jpg,Valter Figueiredu's ,KAIO,1,9,4,0,0.6923076923076923,1381.3,1089.5
-6,2018,8,1,http://g.espncdn.com/s/ffllm/logos/StarWarsTheForceAwakens-ToddDetwiler/ESPN_Star_Wars_12a.svg,Team Maia,MAIA,5,9,4,0,0.6923076923076923,1024.5,956.2
-7,2018,9,3,http://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,14,4,9,0,0.3076923076923077,1026.4,1179.7
-8,2018,10,0,http://g.espncdn.com/s/ffllm/logos/MickeyAndDonald-Disney/Disney-08.svg,KAISER TROOPERS,KATO,7,8,5,0,0.6153846153846154,987.0,1086.4
-9,2018,11,2,http://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,13,5,8,0,0.3846153846153846,1015.6,1108.1
-10,2018,12,1,http://imagizer.imageshack.us/a/img921/8576/U6F9Jw.jpg,Rosa Patriota,Rosa,11,5,8,0,0.3846153846153846,1037.3,1174.4
-11,2018,13,0,http://imagizer.imageshack.us/a/img922/1025/Qt8enM.jpg,Team Britto,BRIT,6,8,5,0,0.6153846153846154,1269.4,1156.0
-12,2018,14,0,http://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,12,5,8,0,0.3846153846153846,1021.3,1147.0
-13,2018,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,15,2,11,0,0.1538461538461538,996.3,1268.5
-14,2018,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,2,9,4,0,0.6923076923076923,1295.2000000000005,1040.5
-15,2018,17,3,https://uploaddeimagens.com.br/images/001/725/567/full/logo.jpg?1542139515,Team Otavio,OTAV,10,6,7,0,0.4615384615384615,1136.5,1135.6
-16,2019,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,1,11,1,1,0.8846153846153846,1290.6,980.3
-17,2019,2,3,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,9,7,6,0,0.5384615384615384,1013.6,1147.4
-18,2019,3,3,http://i64.tinypic.com/2qbgf3t.png,Recife Black Mambas,JOAO,4,7,6,0,0.5384615384615384,1140.6,1080.5
-19,2019,4,2,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,11,6,6,1,0.5,1014.2,1012.6
-20,2019,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,14,3,10,0,0.2307692307692307,1104.9,1155.9999999999998
-21,2019,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,2,9,4,0,0.6923076923076923,1252.3,933.2
-22,2019,8,1,https://g.espncdn.com/s/ffllm/logos/StarWarsTheForceAwakens-ToddDetwiler/ESPN_Star_Wars_12a.svg,Team Maia,MAIA,15,3,10,0,0.2307692307692307,884.0000000000001,1192.3
-23,2019,9,3,https://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,8,7,6,0,0.5384615384615384,1108.6,1148.3000000000002
-24,2019,10,0,https://upload.wikimedia.org/wikipedia/commons/7/72/Bras%C3%A3o_do_Estado_de_Pernambuco.png,KAISER TROOPERS,KATO,16,2,11,0,0.1538461538461538,905.8,1225.6
-25,2019,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,10,7,6,0,0.5384615384615384,1012.0,992.0
-26,2019,12,1,http://imagizer.imageshack.us/a/img921/8576/U6F9Jw.jpg,Rosa Patriota,Rosa,5,8,5,0,0.6153846153846154,1095.4,1147.6
-27,2019,13,0,http://imagizer.imageshack.us/a/img922/1025/Qt8enM.jpg,Team Britto,BRIT,6,8,5,0,0.6153846153846154,1012.9,966.4
-28,2019,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,13,3,9,1,0.2692307692307692,957.9,1132.9
-29,2019,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,3,8,5,0,0.6153846153846154,1080.0,1049.7
-30,2019,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,7,7,5,1,0.5769230769230769,1053.1,947.5
-31,2019,17,3,https://uploaddeimagens.com.br/images/001/725/567/full/logo.jpg?1542139515,Team Otavio,OTAV,12,6,7,0,0.4615384615384615,1215.6,1029.2
-32,2020,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,2,10,3,0,0.7692307692307693,1004.2,856.4
-33,2020,2,3,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,9,6,7,0,0.4615384615384615,931.4999999999998,937.8
-34,2020,3,3,https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-02.svg,Recife Black Mambas,JOAO,1,11,2,0,0.8461538461538461,1090.8,815.0
-35,2020,4,2,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,13,4,9,0,0.3076923076923077,1048.4,1175.8
-36,2020,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,6,8,5,0,0.6153846153846154,978.4,911.0
-37,2020,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,14,4,9,0,0.3076923076923077,991.0,1044.7
-38,2020,8,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CrazyHelmets-ToddDetwiler/Helmets_11.svg,Igara  Boys ,IGB,3,9,4,0,0.6923076923076923,1167.4,979.9
-39,2020,9,3,https://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,10,5,8,0,0.3846153846153846,929.9,998.6
-40,2020,10,0,https://upload.wikimedia.org/wikipedia/commons/7/72/Bras%C3%A3o_do_Estado_de_Pernambuco.png,KAISER TROOPERS,KATO,15,4,9,0,0.3076923076923077,766.9,1009.7
-41,2020,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,8,7,6,0,0.5384615384615384,1023.6,1059.0
-42,2020,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Opt outs,NE,12,5,8,0,0.3846153846153846,899.6,1072.3
-43,2020,13,0,http://imagizer.imageshack.us/a/img922/1025/Qt8enM.jpg,Team Britto,BRIT,5,8,5,0,0.6153846153846154,1000.1,890.8999999999999
-44,2020,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,16,3,10,0,0.2307692307692307,974.2999999999998,1062.6999999999998
-45,2020,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,7,7,6,0,0.5384615384615384,1188.6999999999998,1068.6
-46,2020,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,4,8,5,0,0.6153846153846154,1155.6,1125.6999999999998
-47,2020,17,3,https://uploaddeimagens.com.br/images/001/725/567/full/logo.jpg?1542139515,Team Otavio,OTAV,11,5,8,0,0.3846153846153846,910.8,1053.1
-48,2021,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,13,5,9,0,0.3571428571428571,1029.4,1024.1
-49,2021,2,3,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,7,8,6,0,0.5714285714285714,1153.9,1015.8
-50,2021,3,3,https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-02.svg,Recife Black Mambas,JOAO,11,5,9,0,0.3571428571428571,1033.0,1107.3999999999996
-51,2021,4,0,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,1,11,3,0,0.7857142857142857,1262.2000000000005,1056.6999999999998
-52,2021,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,3,9,5,0,0.6428571428571429,1090.0,1042.9
-53,2021,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,9,6,8,0,0.4285714285714285,1036.3,1143.3
-54,2021,8,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CrazyHelmets-ToddDetwiler/Helmets_11.svg,Igara  Boys ,IGB,16,3,11,0,0.2142857142857142,1101.8000000000002,1185.1
-55,2021,9,3,https://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,4,9,5,0,0.6428571428571429,1059.9,990.8000000000002
-56,2021,10,3,https://upload.wikimedia.org/wikipedia/commons/7/72/Bras%C3%A3o_do_Estado_de_Pernambuco.png,KAISER TROOPERS,KATO,14,5,9,0,0.3571428571428571,912.9,1131.6999999999998
-57,2021,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,10,5,9,0,0.3571428571428571,1033.4,1099.2
-58,2021,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Mac'n Cheesers,NE,12,5,9,0,0.3571428571428571,1031.7,1155.1
-59,2021,13,0,https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_08.svg,Team Britto,BRIT,5,11,3,0,0.7857142857142857,1155.4,1015.8000000000002
-60,2021,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,15,4,10,0,0.2857142857142857,952.6,1105.1
-61,2021,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,8,7,7,0,0.5,997.2,1031.5
-62,2021,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,6,9,5,0,0.6428571428571429,1155.8,1066.2000000000005
-63,2021,17,2,https://g.espncdn.com/lm-static/logo-packs/ffl/Talent-ChipWass/talent-berry.svg,The  Maniac’s,FEAR,2,10,4,0,0.7142857142857143,1110.6,945.4
-64,2022,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,13,4,10,0,0.2857142857142857,1048.7,1246.8
-65,2022,2,3,https://i.postimg.cc/G2gvMtT5/Screenshot-20220825-184536-Drive.jpg,Curado Sport Saints,CSS,7,8,6,0,0.5714285714285714,1053.0,956.3
-66,2022,3,3,https://imagizer.imageshack.com/img923/8461/F0vgH9.png,Recife Black Mambas,JOAO,16,4,10,0,0.2857142857142857,814.7,955.0
-67,2022,4,0,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-17.svg,Bonus Team,BT,1,12,2,0,0.8571428571428571,1207.5,917.8
-68,2022,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,15,4,10,0,0.2857142857142857,914.6,1081.8
-69,2022,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,8,7,7,0,0.5,1068.3,921.3
-70,2022,8,1,https://i.postimg.cc/kMz49QMC/Igara-Boys.png,Igara  Boys ,IGB,4,9,5,0,0.6428571428571429,1054.4,1011.5
-71,2022,9,3,https://serving.photos.photobox.com/011998854bcf0eb3dbcd6490da5d8a08678e550681b83912baf79f1472e54f7bc3f6009f.jpg,CDU Alligators,ALLI,2,11,3,0,0.7857142857142857,1210.1999999999998,1057.1
-72,2022,10,3,https://i.pinimg.com/originals/6c/f1/36/6cf1363aea94c8fd8059ec7d7dbbaded.jpg,Olinda Firefighters,OLFF,9,6,8,0,0.4285714285714285,1000.7,1140.1
-73,2022,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,11,5,9,0,0.3571428571428571,1102.4,1186.3
-74,2022,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Mac'n Cheesers,NE,6,8,6,0,0.5714285714285714,1079.8,953.7
-75,2022,13,0,https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_08.svg,Team Britto,BRIT,14,4,10,0,0.2857142857142857,950.9,1033.4
-76,2022,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,10,6,8,0,0.4285714285714285,943.0,1122.2000000000005
-77,2022,15,2,https://i.im.ge/2022/08/23/OiERgT.PGC.png,Paulista Ghost Crabs,PGC,3,11,3,0,0.7857142857142857,1165.3000000000002,1058.4
-78,2022,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,5,8,6,0,0.5714285714285714,1093.1,1045.9
-79,2022,17,2,https://g.espncdn.com/lm-static/logo-packs/ffl/Talent-ChipWass/talent-berry.svg,The  Maniac’s,FEAR,12,5,9,0,0.3571428571428571,1040.1999999999998,1059.2
-80,2023,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,7,2,1,0,0.6666666666666666,240.70000000000002,235.5
-81,2023,2,3,https://i.postimg.cc/G2gvMtT5/Screenshot-20220825-184536-Drive.jpg,Curado Sport Saints,CSS,14,1,2,0,0.3333333333333333,190.7,221.6
-82,2023,3,3,https://thumbs2.imgbox.com/e8/9c/hKBPGn9C_t.png,Espinheiro Last Placers,JOAO,12,1,2,0,0.3333333333333333,202.5,188.8
-83,2023,4,0,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-17.svg,Bonus Team,BT,11,1,2,0,0.3333333333333333,226.6,250.10000000000002
-84,2023,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,8,2,1,0,0.6666666666666666,238.5,221.39999999999998
-85,2023,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,15,0,3,0,0.0,201.39999999999998,238.3
-86,2023,8,1,https://i.postimg.cc/kMz49QMC/Igara-Boys.png,Igara  Boys ,IGB,3,2,1,0,0.6666666666666666,248.0,225.9
-87,2023,9,3,https://serving.photos.photobox.com/011998854bcf0eb3dbcd6490da5d8a08678e550681b83912baf79f1472e54f7bc3f6009f.jpg,Maria Farinha Alligators,ALLI,4,1,2,0,0.3333333333333333,256.5,242.4
-88,2023,10,3,https://i.pinimg.com/originals/6c/f1/36/6cf1363aea94c8fd8059ec7d7dbbaded.jpg,Olinda Firefighters,OLFF,13,1,2,0,0.3333333333333333,197.39999999999998,241.29999999999998
-89,2023,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,9,2,1,0,0.6666666666666666,215.5,242.3
-90,2023,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Mac'n Cheesers,NE,6,2,1,0,0.6666666666666666,243.1,249.7
-91,2023,13,0,https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_08.svg,Team Britto,BRIT,5,2,1,0,0.6666666666666666,253.10000000000002,232.1
-92,2023,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,2,3,0,0,1.0,245.4,201.1
-93,2023,15,2,https://i.im.ge/2022/08/23/OiERgT.PGC.png,Paulista Ghost Crabs,PGC,1,3,0,0,1.0,269.6,156.60000000000002
-94,2023,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,10,1,2,0,0.3333333333333333,255.0,251.60000000000002
-95,2023,17,2,https://g.espncdn.com/lm-static/logo-packs/ffl/Talent-ChipWass/talent-berry.svg,The  Maniac’s,ROFL,16,0,3,0,0.0,188.39999999999998,273.7
+,Season,id,Division,Logo,Name,Abbrev,Seed,Wins,Losses,Ties,%,PF,PA,ExpectedWins,PFonWins,PAonLosses,PFonLosses,PAonWins
+0,2018,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,4,9,4,0,0.6923076923076923,1186.9,1017.0,8.466666666666667,0,0,0,0
+1,2018,2,3,http://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,3,9,4,0,0.6923076923076923,1293.5,998.2,9.466666666666669,0,0,0,0
+2,2018,3,3,http://i64.tinypic.com/2qbgf3t.png,Recife Eulers,JOAO,9,7,6,0,0.5384615384615384,1083.8,1199.6,6.933333333333335,0,0,0,0
+3,2018,4,2,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,8,7,6,0,0.5384615384615384,1147.6,1074.8,7.6,0,0,0,0
+4,2018,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,16,2,11,0,0.1538461538461538,774.5,1045.6,2.2,0,0,0,0
+5,2018,7,1,http://i63.tinypic.com/dpx2ck.jpg,Valter Figueiredu's ,KAIO,1,9,4,0,0.6923076923076923,1381.3,1089.5,10.933333333333334,0,0,0,0
+6,2018,8,1,http://g.espncdn.com/s/ffllm/logos/StarWarsTheForceAwakens-ToddDetwiler/ESPN_Star_Wars_12a.svg,Team Maia,MAIA,5,9,4,0,0.6923076923076923,1024.5,956.2,5.466666666666666,0,0,0,0
+7,2018,9,3,http://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,14,4,9,0,0.3076923076923077,1026.4,1179.7,5.999999999999999,0,0,0,0
+8,2018,10,0,http://g.espncdn.com/s/ffllm/logos/MickeyAndDonald-Disney/Disney-08.svg,KAISER TROOPERS,KATO,7,8,5,0,0.6153846153846154,987.0,1086.4,5.333333333333333,0,0,0,0
+9,2018,11,2,http://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,13,5,8,0,0.3846153846153846,1015.6,1108.1,6.466666666666667,0,0,0,0
+10,2018,12,1,http://imagizer.imageshack.us/a/img921/8576/U6F9Jw.jpg,Rosa Patriota,Rosa,11,5,8,0,0.3846153846153846,1037.3,1174.4,6.533333333333335,0,0,0,0
+11,2018,13,0,http://imagizer.imageshack.us/a/img922/1025/Qt8enM.jpg,Team Britto,BRIT,6,8,5,0,0.6153846153846154,1269.4,1156.0,9.133333333333333,0,0,0,0
+12,2018,14,0,http://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,12,5,8,0,0.3846153846153846,1021.3,1147.0,5.466666666666666,0,0,0,0
+13,2018,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,15,2,11,0,0.1538461538461538,996.3,1268.5,6.000000000000001,0,0,0,0
+14,2018,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,2,9,4,0,0.6923076923076923,1295.2000000000005,1040.5,9.4,0,0,0,0
+15,2018,17,3,https://uploaddeimagens.com.br/images/001/725/567/full/logo.jpg?1542139515,Team Otavio,OTAV,10,6,7,0,0.4615384615384615,1136.5,1135.6,6.8,0,0,0,0
+16,2019,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,1,11,1,1,0.8846153846153846,1290.6,980.3,9.733333333333334,0,0,0,0
+17,2019,2,3,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,9,7,6,0,0.5384615384615384,1013.6,1147.4,6.800000000000001,0,0,0,0
+18,2019,3,3,http://i64.tinypic.com/2qbgf3t.png,Recife Black Mambas,JOAO,4,7,6,0,0.5384615384615384,1140.6,1080.5,8.2,0,0,0,0
+19,2019,4,2,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,11,6,6,1,0.5,1014.2,1012.6,6.466666666666666,0,0,0,0
+20,2019,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,14,3,10,0,0.2307692307692307,1104.9,1155.9999999999998,7.466666666666666,0,0,0,0
+21,2019,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,2,9,4,0,0.6923076923076923,1252.3,933.2,8.999999999999998,0,0,0,0
+22,2019,8,1,https://g.espncdn.com/s/ffllm/logos/StarWarsTheForceAwakens-ToddDetwiler/ESPN_Star_Wars_12a.svg,Team Maia,MAIA,15,3,10,0,0.2307692307692307,884.0000000000001,1192.3,4.4,0,0,0,0
+23,2019,9,3,https://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,8,7,6,0,0.5384615384615384,1108.6,1148.3000000000002,7.333333333333334,0,0,0,0
+24,2019,10,0,https://upload.wikimedia.org/wikipedia/commons/7/72/Bras%C3%A3o_do_Estado_de_Pernambuco.png,KAISER TROOPERS,KATO,16,2,11,0,0.1538461538461538,905.8,1225.6,4.599999999999999,0,0,0,0
+25,2019,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,10,7,6,0,0.5384615384615384,1012.0,992.0,6.066666666666668,0,0,0,0
+26,2019,12,1,http://imagizer.imageshack.us/a/img921/8576/U6F9Jw.jpg,Rosa Patriota,Rosa,5,8,5,0,0.6153846153846154,1095.4,1147.6,7.866666666666667,0,0,0,0
+27,2019,13,0,http://imagizer.imageshack.us/a/img922/1025/Qt8enM.jpg,Team Britto,BRIT,6,8,5,0,0.6153846153846154,1012.9,966.4,6.0,0,0,0,0
+28,2019,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,13,3,9,1,0.2692307692307692,957.9,1132.9,4.933333333333333,0,0,0,0
+29,2019,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,3,8,5,0,0.6153846153846154,1080.0,1049.7,7.866666666666666,0,0,0,0
+30,2019,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,7,7,5,1,0.5769230769230769,1053.1,947.5,6.333333333333334,0,0,0,0
+31,2019,17,3,https://uploaddeimagens.com.br/images/001/725/567/full/logo.jpg?1542139515,Team Otavio,OTAV,12,6,7,0,0.4615384615384615,1215.6,1029.2,9.2,0,0,0,0
+32,2020,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,2,10,3,0,0.7692307692307693,1004.2,856.4,7.466666666666666,0,0,0,0
+33,2020,2,3,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,9,6,7,0,0.4615384615384615,931.4999999999998,937.8,5.466666666666667,0,0,0,0
+34,2020,3,3,https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-02.svg,Recife Black Mambas,JOAO,1,11,2,0,0.8461538461538461,1090.8,815.0,9.0,0,0,0,0
+35,2020,4,2,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,13,4,9,0,0.3076923076923077,1048.4,1175.8,7.4,0,0,0,0
+36,2020,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,6,8,5,0,0.6153846153846154,978.4,911.0,6.6,0,0,0,0
+37,2020,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,14,4,9,0,0.3076923076923077,991.0,1044.7,6.466666666666667,0,0,0,0
+38,2020,8,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CrazyHelmets-ToddDetwiler/Helmets_11.svg,Igara  Boys ,IGB,3,9,4,0,0.6923076923076923,1167.4,979.9,9.6,0,0,0,0
+39,2020,9,3,https://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,10,5,8,0,0.3846153846153846,929.9,998.6,5.933333333333331,0,0,0,0
+40,2020,10,0,https://upload.wikimedia.org/wikipedia/commons/7/72/Bras%C3%A3o_do_Estado_de_Pernambuco.png,KAISER TROOPERS,KATO,15,4,9,0,0.3076923076923077,766.9,1009.7,4.266666666666667,0,0,0,0
+41,2020,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,8,7,6,0,0.5384615384615384,1023.6,1059.0,7.466666666666667,0,0,0,0
+42,2020,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Opt outs,NE,12,5,8,0,0.3846153846153846,899.6,1072.3,5.199999999999999,0,0,0,0
+43,2020,13,0,http://imagizer.imageshack.us/a/img922/1025/Qt8enM.jpg,Team Britto,BRIT,5,8,5,0,0.6153846153846154,1000.1,890.8999999999999,6.6000000000000005,0,0,0,0
+44,2020,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,16,3,10,0,0.2307692307692307,974.2999999999998,1062.6999999999998,5.933333333333332,0,0,0,0
+45,2020,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,7,7,6,0,0.5384615384615384,1188.6999999999998,1068.6,9.533333333333331,0,0,0,0
+46,2020,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,4,8,5,0,0.6153846153846154,1155.6,1125.6999999999998,9.666666666666666,0,0,0,0
+47,2020,17,3,https://uploaddeimagens.com.br/images/001/725/567/full/logo.jpg?1542139515,Team Otavio,OTAV,11,5,8,0,0.3846153846153846,910.8,1053.1,5.466666666666667,0,0,0,0
+48,2021,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,13,5,9,0,0.3571428571428571,1029.4,1024.1,6.533333333333332,0,0,0,0
+49,2021,2,3,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-27.svg,Curado Sport Saints,CSS,7,8,6,0,0.5714285714285714,1153.9,1015.8,7.933333333333334,0,0,0,0
+50,2021,3,3,https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-02.svg,Recife Black Mambas,JOAO,11,5,9,0,0.3571428571428571,1033.0,1107.3999999999996,6.6,0,0,0,0
+51,2021,4,0,https://cdn-std.dprcdn.net/files/acc_464038/pbLQg8,Bonus Team,BT,1,11,3,0,0.7857142857142857,1262.2000000000005,1056.6999999999998,9.666666666666666,0,0,0,0
+52,2021,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,3,9,5,0,0.6428571428571429,1090.0,1042.9,7.733333333333332,0,0,0,0
+53,2021,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,9,6,8,0,0.4285714285714285,1036.3,1143.3,6.066666666666666,0,0,0,0
+54,2021,8,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CrazyHelmets-ToddDetwiler/Helmets_11.svg,Igara  Boys ,IGB,16,3,11,0,0.2142857142857142,1101.8000000000002,1185.1,7.2,0,0,0,0
+55,2021,9,3,https://g.espncdn.com/lm-static/logo-packs/core/StarsAndFlames/stars_flames-2.svg,CDU Steamers,STM,4,9,5,0,0.6428571428571429,1059.9,990.8000000000002,6.866666666666666,0,0,0,0
+56,2021,10,3,https://upload.wikimedia.org/wikipedia/commons/7/72/Bras%C3%A3o_do_Estado_de_Pernambuco.png,KAISER TROOPERS,KATO,14,5,9,0,0.3571428571428571,912.9,1131.6999999999998,4.999999999999998,0,0,0,0
+57,2021,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,10,5,9,0,0.3571428571428571,1033.4,1099.2,6.933333333333334,0,0,0,0
+58,2021,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Mac'n Cheesers,NE,12,5,9,0,0.3571428571428571,1031.7,1155.1,6.199999999999999,0,0,0,0
+59,2021,13,0,https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_08.svg,Team Britto,BRIT,5,11,3,0,0.7857142857142857,1155.4,1015.8000000000002,8.6,0,0,0,0
+60,2021,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,15,4,10,0,0.2857142857142857,952.6,1105.1,4.866666666666666,0,0,0,0
+61,2021,15,2,https://imageshack.com/a/img923/4306/Sll1KD.jpg,Maria Farinha Green n Gold,MFGG,8,7,7,0,0.5,997.2,1031.5,5.866666666666667,0,0,0,0
+62,2021,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,6,9,5,0,0.6428571428571429,1155.8,1066.2000000000005,8.466666666666667,0,0,0,0
+63,2021,17,2,https://g.espncdn.com/lm-static/logo-packs/ffl/Talent-ChipWass/talent-berry.svg,The  Maniac’s,FEAR,2,10,4,0,0.7142857142857143,1110.6,945.4,7.533333333333334,0,0,0,0
+64,2022,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,13,4,10,0,0.2857142857142857,1048.7,1246.8,6.7333333333333325,0,0,0,0
+65,2022,2,3,https://i.postimg.cc/G2gvMtT5/Screenshot-20220825-184536-Drive.jpg,Curado Sport Saints,CSS,7,8,6,0,0.5714285714285714,1053.0,956.3,7.466666666666666,0,0,0,0
+66,2022,3,3,https://imagizer.imageshack.com/img923/8461/F0vgH9.png,Recife Black Mambas,JOAO,16,4,10,0,0.2857142857142857,814.7,955.0,2.8666666666666663,0,0,0,0
+67,2022,4,0,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-17.svg,Bonus Team,BT,1,12,2,0,0.8571428571428571,1207.5,917.8,9.733333333333333,0,0,0,0
+68,2022,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,15,4,10,0,0.2857142857142857,914.6,1081.8,5.466666666666666,0,0,0,0
+69,2022,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,8,7,7,0,0.5,1068.3,921.3,6.800000000000001,0,0,0,0
+70,2022,8,1,https://i.postimg.cc/kMz49QMC/Igara-Boys.png,Igara  Boys ,IGB,4,9,5,0,0.6428571428571429,1054.4,1011.5,7.133333333333334,0,0,0,0
+71,2022,9,3,https://serving.photos.photobox.com/011998854bcf0eb3dbcd6490da5d8a08678e550681b83912baf79f1472e54f7bc3f6009f.jpg,CDU Alligators,ALLI,2,11,3,0,0.7857142857142857,1210.1999999999998,1057.1,8.866666666666665,0,0,0,0
+72,2022,10,3,https://i.pinimg.com/originals/6c/f1/36/6cf1363aea94c8fd8059ec7d7dbbaded.jpg,Olinda Firefighters,OLFF,9,6,8,0,0.4285714285714285,1000.7,1140.1,6.800000000000001,0,0,0,0
+73,2022,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,11,5,9,0,0.3571428571428571,1102.4,1186.3,7.533333333333333,0,0,0,0
+74,2022,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Mac'n Cheesers,NE,6,8,6,0,0.5714285714285714,1079.8,953.7,7.199999999999999,0,0,0,0
+75,2022,13,0,https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_08.svg,Team Britto,BRIT,14,4,10,0,0.2857142857142857,950.9,1033.4,5.199999999999999,0,0,0,0
+76,2022,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,10,6,8,0,0.4285714285714285,943.0,1122.2000000000005,5.666666666666666,0,0,0,0
+77,2022,15,2,https://i.im.ge/2022/08/23/OiERgT.PGC.png,Paulista Ghost Crabs,PGC,3,11,3,0,0.7857142857142857,1165.3000000000002,1058.4,9.466666666666669,0,0,0,0
+78,2022,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,5,8,6,0,0.5714285714285714,1093.1,1045.9,8.266666666666667,0,0,0,0
+79,2022,17,2,https://g.espncdn.com/lm-static/logo-packs/ffl/Talent-ChipWass/talent-berry.svg,The  Maniac’s,FEAR,12,5,9,0,0.3571428571428571,1040.1999999999998,1059.2,7.133333333333333,0,0,0,0
+80,2023,1,0,https://imageshack.com/a/img921/8492/jQlkYN.jpg,The Queijo Coalho,QUEI,7,2,1,0,0.6666666666666666,240.7,235.5,1.9333333333333336,0,0,0,0
+81,2023,2,3,https://i.postimg.cc/G2gvMtT5/Screenshot-20220825-184536-Drive.jpg,Curado Sport Saints,CSS,14,1,2,0,0.3333333333333333,190.7,221.6,0.6000000000000001,0,0,0,0
+82,2023,3,3,https://thumbs2.imgbox.com/e8/9c/hKBPGn9C_t.png,Espinheiro Last Placers,JOAO,12,1,2,0,0.3333333333333333,202.5,188.8,0.7999999999999999,0,0,0,0
+83,2023,4,0,https://g.espncdn.com/lm-static/logo-packs/ffl/TeamKinny-MartinLaksman/TeamKinny-17.svg,Bonus Team,BT,11,1,2,0,0.3333333333333333,226.6,250.1,1.5999999999999999,0,0,0,0
+84,2023,5,1,http://2.bp.blogspot.com/-zstn9mJPVJE/TymqfH_hN6I/AAAAAAAAAgA/ughMAoBPn4s/s1600/anti+brady.jpg,Anti-Brady Team,ABT,8,2,1,0,0.6666666666666666,238.5,221.4,1.6666666666666665,0,0,0,0
+85,2023,7,1,https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-11.svg,Valter Figueiredu's ,KAIO,15,0,3,0,0.0,201.4,238.3,0.7333333333333332,0,0,0,0
+86,2023,8,1,https://i.postimg.cc/kMz49QMC/Igara-Boys.png,Igara  Boys ,IGB,3,2,1,0,0.6666666666666666,248.0,225.9,1.6666666666666665,0,0,0,0
+87,2023,9,3,https://serving.photos.photobox.com/011998854bcf0eb3dbcd6490da5d8a08678e550681b83912baf79f1472e54f7bc3f6009f.jpg,Maria Farinha Alligators,ALLI,4,1,2,0,0.3333333333333333,256.5,242.4,2.0,0,0,0,0
+88,2023,10,3,https://i.pinimg.com/originals/6c/f1/36/6cf1363aea94c8fd8059ec7d7dbbaded.jpg,Olinda Firefighters,OLFF,13,1,2,0,0.3333333333333333,197.4,241.3,0.6666666666666666,0,0,0,0
+89,2023,11,2,https://g.espncdn.com/s/ffllm/logos/BoneHeads-ToddDetwiler/BoneHeads-09.svg,Carpina Carpenters,Carp,9,2,1,0,0.6666666666666666,215.5,242.3,1.3333333333333333,0,0,0,0
+90,2023,12,1,https://g.espncdn.com/lm-static/logo-packs/core/StarWarsTheRiseOfSkywalker/rise-skywalker-r2d2.svg,NE Mac'n Cheesers,NE,6,2,1,0,0.6666666666666666,243.1,249.7,1.9333333333333333,0,0,0,0
+91,2023,13,0,https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_08.svg,Team Britto,BRIT,5,2,1,0,0.6666666666666666,253.1,232.1,1.7333333333333334,0,0,0,0
+92,2023,14,0,https://g.espncdn.com/s/ffllm/logos/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg,Hellcife Mottinha,MOTT,2,3,0,0,1.0,245.4,201.1,2.0666666666666664,0,0,0,0
+93,2023,15,2,https://i.im.ge/2022/08/23/OiERgT.PGC.png,Paulista Ghost Crabs,PGC,1,3,0,0,1.0,269.6,156.60000000000002,2.466666666666667,0,0,0,0
+94,2023,16,2,https://scontent.frec5-1.fna.fbcdn.net/v/t1.0-9/42647793_1911801742231791_8353841562588807168_n.jpg?_nc_cat=111&oh=3751fb0c891ed5b59aded4c707712f08&oe=5C1DF581,Recife Burilzords,BZDS,10,1,2,0,0.3333333333333333,255.0,251.6,2.0666666666666664,0,0,0,0
+95,2023,17,2,https://g.espncdn.com/lm-static/logo-packs/ffl/Talent-ChipWass/talent-berry.svg,The  Maniac’s,ROFL,16,0,3,0,0.0,188.4,273.7,0.7999999999999999,0,0,0,0

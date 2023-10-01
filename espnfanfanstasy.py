@@ -416,49 +416,7 @@ class FantasyLeague:
         self.matchup_df = pd.concat(all_matchup_data, ignore_index=True)
 
         return self.matchup_df
-
-    def fill_expectancy(self):
-        matchup_df = self.get_schedule_data()
-        standings_df = self.get_division_standings()
-        rank_pd = pd.DataFrame()
-        aux = matchup_df.copy()
-        aux2 = matchup_df.copy()
-        aux = aux[['Week', 'Name1', 'Score1', 'Name2', 'Score2']]
-        aux2 = aux2.rename(columns={'Name1': 'Name', 'Score1': 'Score', 'Name2': 'Name1', 'Score2': 'Score1'})
-        aux2 = aux2.rename(columns={'Name': 'Name2', 'Score': 'Score2'})
-        aux2 = aux2[['Week', 'Name2', 'Score2', 'Name1', 'Score1']]
-        aux = pd.concat([aux, aux2], ignore_index=True)
-        aux = aux.sort_values(by=['Week'], ascending=[True], ignore_index=True)
-        ranked = aux.copy()
-
-        for week in range(1,15):
-            aux = ranked.copy()
-            if (ranked['Score1'][week]!=0):
-                aux.drop(aux[aux['Week'] != week].index, inplace=True)
-                
-                aux2 = aux.copy()
-                aux2 = aux2.sort_values(by=['Score1'], ascending=[False], ignore_index=True)
-                aux2['Rank'] = aux2.index+1
-                rank_pd = pd.concat([rank_pd, aux2], ignore_index=True)
-
-        rank_pd.drop(rank_pd[rank_pd['Score1'] == 0].index, inplace=True)
-
-
-        rank_pd = rank_pd[['Week', 'Name1', 'Score1', 'Rank']]
-        rank_pd['ExpectedVictories'] = (16-rank_pd['Rank'])/15
-        team_expectancy = rank_pd.copy()
-        team_expectancy.drop(team_expectancy[team_expectancy['Week'] != 1].index, inplace=True)
-        standings_df['ExpectedVictories'] = 16*[0]
-        standings_df = standings_df.sort_values(by=['Name'], ascending=[False], ignore_index=True)
-        team_expectancy = team_expectancy.sort_values(by=['Name1'], ascending=[False], ignore_index=True)
-        for team in range(0,16):
-            team_name = team_expectancy['Name1'][team]
-            standings_df['ExpectedVictories'][team] = standings_df['ExpectedVictories'][team] + rank_pd.loc[rank_pd['Name1'] == team_name, 'ExpectedVictories'].sum()
-
-        standings_df['Wins_Deviation'] = standings_df['Wins'] - standings_df['ExpectedVictories']
-
-        return standings_df
-    
+        
     # Retorna a DataFrame das matchups de uma Semana específica do ano que está conectado {{self.year}}
     def get_matchup_data_by_week(self, week):
         # Pull team and matchup data from the URL
@@ -498,6 +456,7 @@ class FantasyLeague:
             'home.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal2',
             #'home.rosterForCurrentScoringPeriod.entries': 'CurrentEntries2', # Para o futuro
             'home.totalPoints': 'Score2',
+            'winner': 'Winner',
         }
 
         team_column_names = {
@@ -523,8 +482,24 @@ class FantasyLeague:
         # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
         matchup_df['Season'] = self.year
 
+        # Colunas para rankings
+        # Vitórias esperadas
+        team_df['ExpectedWins'] = 0
+
+        # Pontos feitos nas vitórias
+        team_df['PFonWins'] = 0
+
+        # Pontos sofridos nas derrotas
+        team_df['PAonLosses'] = 0
+
+        # Pontos feitos nas derrotas
+        team_df['PFonLosses'] = 0
+
+        # Pontos sofridos nas vitórias
+        team_df['PAonWins'] = 0 
+
         # Retira todas as colunas do DataFrame, exceto as listadas
-        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties'])
+        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses', 'PAonWins'])
 
         # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.rename(columns={"Team1": "id"})
@@ -537,9 +512,14 @@ class FantasyLeague:
         matchup_df = matchup_df.rename(columns={'Ties': 'Ties1'})
         matchup_df = matchup_df.rename(columns={'Name': 'Name1'})
         matchup_df = matchup_df.rename(columns={'Logo': 'Logo1'})
+        matchup_df = matchup_df.rename(columns={'ExpectedWins': 'ExpectedWins1'})
+        matchup_df = matchup_df.rename(columns={'PFonWins': 'PFonWins1'})
+        matchup_df = matchup_df.rename(columns={'PAonLosses': 'PAonLosses1'})
+        matchup_df = matchup_df.rename(columns={'PFonLosses': 'PFonLosses1'})
+        matchup_df = matchup_df.rename(columns={'PAonWins': 'PAonWins1'})
 
         # (1) Reordena as colunas após a primeira mescla
-        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
+        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
                                  'Team2', 'Score2', 'CurrentStatsTotal2', 'Type']]
 
         # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
@@ -553,10 +533,15 @@ class FantasyLeague:
         matchup_df = matchup_df.rename(columns={'Ties': 'Ties2'})
         matchup_df = matchup_df.rename(columns={'Name': 'Name2'})
         matchup_df = matchup_df.rename(columns={'Logo': 'Logo2'})
+        matchup_df = matchup_df.rename(columns={'ExpectedWins': 'ExpectedWins2'})
+        matchup_df = matchup_df.rename(columns={'PFonWins': 'PFonWins2'})
+        matchup_df = matchup_df.rename(columns={'PAonLosses': 'PAonLosses2'})
+        matchup_df = matchup_df.rename(columns={'PFonLosses': 'PFonLosses2'})
+        matchup_df = matchup_df.rename(columns={'PAonWins': 'PAonWins2'})
 
         # (2) Reordena as colunas após a segunda mescla
-        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
-                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'Type']]
+        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
+                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'ExpectedWins2', 'PFonWins2', 'PAonLosses2', 'PFonLosses2', 'PAonWins2', 'Type']]
         
         return matchup_df
     
@@ -615,6 +600,7 @@ class FantasyLeague:
             'home.rosterForCurrentScoringPeriod.appliedStatTotal': 'CurrentStatsTotal2',
             #'home.rosterForCurrentScoringPeriod.entries': 'CurrentEntries2', # Para o futuro
             'home.totalPoints': 'Score2',
+            'winner': 'Winner',
         }
 
         team_column_names = {
@@ -640,8 +626,24 @@ class FantasyLeague:
         # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
         matchup_df['Season'] = self.year
 
+        # Colunas para rankings
+        # Vitórias esperadas
+        team_df['ExpectedWins'] = 0
+
+        # Pontos feitos nas vitórias
+        team_df['PFonWins'] = 0
+
+        # Pontos sofridos nas derrotas
+        team_df['PAonLosses'] = 0
+
+        # Pontos feitos nas derrotas
+        team_df['PFonLosses'] = 0
+
+        # Pontos sofridos nas vitórias
+        team_df['PAonWins'] = 0 
+
         # Retira todas as colunas do DataFrame, exceto as listadas
-        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties'])
+        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses', 'PAonWins'])
 
         # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.rename(columns={"Team1": "id"})
@@ -654,9 +656,14 @@ class FantasyLeague:
         matchup_df = matchup_df.rename(columns={'Ties': 'Ties1'})
         matchup_df = matchup_df.rename(columns={'Name': 'Name1'})
         matchup_df = matchup_df.rename(columns={'Logo': 'Logo1'})
+        matchup_df = matchup_df.rename(columns={'ExpectedWins': 'ExpectedWins1'})
+        matchup_df = matchup_df.rename(columns={'PFonWins': 'PFonWins1'})
+        matchup_df = matchup_df.rename(columns={'PAonLosses': 'PAonLosses1'})
+        matchup_df = matchup_df.rename(columns={'PFonLosses': 'PFonLosses1'})
+        matchup_df = matchup_df.rename(columns={'PAonWins': 'PAonWins1'})
 
         # (1) Reordena as colunas após a primeira mescla
-        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
+        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
                                  'Team2', 'Score2', 'CurrentStatsTotal2', 'Type']]
 
         # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
@@ -670,10 +677,15 @@ class FantasyLeague:
         matchup_df = matchup_df.rename(columns={'Ties': 'Ties2'})
         matchup_df = matchup_df.rename(columns={'Name': 'Name2'})
         matchup_df = matchup_df.rename(columns={'Logo': 'Logo2'})
+        matchup_df = matchup_df.rename(columns={'ExpectedWins': 'ExpectedWins2'})
+        matchup_df = matchup_df.rename(columns={'PFonWins': 'PFonWins2'})
+        matchup_df = matchup_df.rename(columns={'PAonLosses': 'PAonLosses2'})
+        matchup_df = matchup_df.rename(columns={'PFonLosses': 'PFonLosses2'})
+        matchup_df = matchup_df.rename(columns={'PAonWins': 'PAonWins2'})
 
         # (2) Reordena as colunas após a segunda mescla
-        matchup_df = matchup_df[['Season', 'Week', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1',
-                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'Type']]
+        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
+                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'ExpectedWins2', 'PFonWins2', 'PAonLosses2', 'PFonLosses2', 'PAonWins2', 'Type']]
         
         # Concatenar resultado com o backup do arquivo e redefinir os IDs
         cur_matchup_df = pd.concat([cur_matchup_df, matchup_df])
@@ -722,8 +734,24 @@ class FantasyLeague:
 
         # Adiciona a coluna com a temporada (mais fácil para encontrar uma matchup específica depois)
         team_df['Season'] = self.year
+        
+        # Colunas para rankings
+        # Vitórias esperadas
+        team_df['ExpectedWins'] = 0
 
-        team_df = team_df[['Season', 'id', 'Division', 'Logo', 'Name', 'Abbrev', 'Seed', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA']]
+        # Pontos feitos nas vitórias
+        team_df['PFonWins'] = 0
+
+        # Pontos sofridos nas derrotas
+        team_df['PAonLosses'] = 0
+
+        # Pontos feitos nas derrotas
+        team_df['PFonLosses'] = 0
+
+        # Pontos sofridos nas vitórias
+        team_df['PAonWins'] = 0 
+
+        team_df = team_df[['Season', 'id', 'Division', 'Logo', 'Name', 'Abbrev', 'Seed', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses','PAonWins']]
 
         # Concatenar resultado com o backup do arquivo e redefinir os IDs
         cur_standings_df = pd.concat([cur_standings_df, team_df])
