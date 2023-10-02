@@ -5,19 +5,9 @@ import pandas as pd
 import request_folder.nfl_requests as espnrequest
 import os
 
-def check_if_update_needed(current_week, current_year):
-    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
-
-    control_panel = get_last_updated_week()
-    # Se a diferença de semanas chegar em 2, devemos atualizar os DataFrames até a semana anterior
-    if (current_week > control_panel['last_standing_update_week'][0] + 1):
-        delete_standings_from_season(current_year)
-        fetch.league.season_standings_history_to_csv()
-        fetch.league.add_matchup_to_csv(fetch.league.get_matchup_data_by_week(week=current_week-1))
-        att_expected_wins_by_season_by_week(season=current_year, week=current_week-1)
-        att_expected_wins_by_season(season=current_year)
-
-        att_control_panel(week=current_week-1)
+######################################################
+## Geral
+######################################################
 
 def format_date(year=0, week=0):
     current_year = datetime.date.today().isocalendar().year
@@ -44,6 +34,45 @@ def format_date(year=0, week=0):
 
     return [current_week, weekday, current_year, time]
 
+
+######################################################
+## Painel de controle
+######################################################
+
+# Controle de atualização dos standings e resultados da rodada. Deverá ser usado no controle de quando as DataFrames serão atualizadas
+def att_control_panel(week):
+    control_panel_df = pd.read_csv(os.getenv('csv_path')+os.getenv('control_panel'))
+    control_panel_df.drop(control_panel_df.columns[0], axis=1, inplace=True)
+
+    control_panel_df['last_standing_update_week'][0] = week
+    control_panel_df['last_matchup_update_week'][0] = week
+
+    control_panel_df.to_csv(os.getenv("csv_path")+os.getenv('control_panel'))
+
+def check_if_update_needed(current_week, current_year):
+    fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
+
+    control_panel = get_last_updated_week()
+    # Se a diferença de semanas chegar em 2, devemos atualizar os DataFrames até a semana anterior
+    if (current_week > control_panel['last_standing_update_week'][0] + 1):
+        delete_standings_from_season(current_year)
+        fetch.league.season_standings_history_to_csv()
+        fetch.league.add_matchup_to_csv(fetch.league.get_matchup_data_by_week(week=current_week-1))
+        att_expected_wins_by_season_by_week(season=current_year, week=current_week-1)
+        att_expected_wins_by_season(season=current_year)
+
+        att_control_panel(week=current_week-1)
+
+def get_last_updated_week():
+    control_panel_df = pd.read_csv(os.getenv('csv_path')+os.getenv('control_panel'))
+    control_panel_df.drop(control_panel_df.columns[0], axis=1, inplace=True)
+
+    return control_panel_df
+
+######################################################
+## Reboots de dados
+######################################################
+
 # Reimportar matchups
 def reimport_matchup_history_from_API(lastSeason):
     # Zerar .csv atual
@@ -53,17 +82,6 @@ def reimport_matchup_history_from_API(lastSeason):
     for season in range(2018,lastSeason+1):
         fetch.league = fetch.connect_league(os.getenv("league_id"), season)
         fetch.league.season_matchup_history_to_csv()
-
-def get_matchup_by_week_season(week, season):
-    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
-    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
-
-    # Retirar todas as season não selecionadas
-    matchup_df.drop(matchup_df[matchup_df['Season'] != season].index, inplace=True)
-    # Retirar todas as semanas não selecionadas
-    matchup_df.drop(matchup_df[matchup_df['Week'] != week].index, inplace=True)
-    
-    return matchup_df
 
 # Reimportar standings
 def reimport_standings_history_from_API(lastSeason):
@@ -75,7 +93,24 @@ def reimport_standings_history_from_API(lastSeason):
         fetch.league = fetch.connect_league(os.getenv("league_id"), season)
         fetch.league.season_standings_history_to_csv()
 
-def get_standings_from_season(season):
+######################################################
+## Controle de CSV
+######################################################
+
+# Retorna matchup_df DO CSV de uma semana específica
+# Como no momento o CSV só armazena jogos finalizados, não serve para jogos em andamento e jogos futuros
+def get_matchup_from_csv(week, season):
+    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
+
+    # Retirar todas as season não selecionadas
+    matchup_df.drop(matchup_df[matchup_df['Season'] != season].index, inplace=True)
+    # Retirar todas as semanas não selecionadas
+    matchup_df.drop(matchup_df[matchup_df['Week'] != week].index, inplace=True)
+    
+    return matchup_df
+
+def get_standings_from_csv(season):
     standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
     standings_df.drop(standings_df.columns[0], axis=1, inplace=True)
 
@@ -90,22 +125,6 @@ def delete_standings_from_season(season):
     # Retirar as standings da Season
     standings_df.drop(standings_df[standings_df['Season'] == season].index, inplace=True)
     standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
-
-def get_last_updated_week():
-    control_panel_df = pd.read_csv(os.getenv('csv_path')+os.getenv('control_panel'))
-    control_panel_df.drop(control_panel_df.columns[0], axis=1, inplace=True)
-
-    return control_panel_df
-
-# Controle de atualização dos standings e resultados da rodada. Deverá ser usado no controle de quando as DataFrames serão atualizadas
-def att_control_panel(week):
-    control_panel_df = pd.read_csv(os.getenv('csv_path')+os.getenv('control_panel'))
-    control_panel_df.drop(control_panel_df.columns[0], axis=1, inplace=True)
-
-    control_panel_df['last_standing_update_week'][0] = week
-    control_panel_df['last_matchup_update_week'][0] = week
-
-    control_panel_df.to_csv(os.getenv("csv_path")+os.getenv('control_panel'))
 
 def att_expected_wins_by_season_by_week(season, week):
     matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))

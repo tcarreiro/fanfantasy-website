@@ -31,7 +31,8 @@ def home():
     #league.att_expected_wins_by_season_by_week(season=2023, week=4)
     #for season in range(2018,2024):
     #    league.att_expected_wins_by_season(season)
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
+    fetch.league.season_matchup_history_to_csv()
+    matchup_data = fetch.league.get_matchup_data_by_week(week=current_week)
     #if request.method == "GET":
 
     return render_template("home.html", current_week=current_week, current_year=current_year, weekday=weekday, hour=time.hour, matchup_data=matchup_data)
@@ -54,8 +55,8 @@ def classificacao():
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
-    teams_data = league.get_standings_from_season(current_year)
+    matchup_data = fetch.league.get_matchup_data_by_week(week=current_week)
+    teams_data = league.get_standings_from_csv(current_year)
 
     # Selecionando Tab e season para obtenção dos dados
     if request.method == 'POST':
@@ -66,7 +67,7 @@ def classificacao():
             tab = request.form.get('standing_tab')
             year = int(request.form.get('season'))
         if (year != current_year):
-            teams_data = league.get_standings_from_season(year)
+            teams_data = league.get_standings_from_csv(year)
             [week, day, league_year, time] = league.format_date(year=year)
         else:
             league_year=current_year
@@ -78,11 +79,9 @@ def classificacao():
     if tab == 'group':
         teams_data = teams_data.sort_values(by=['Division', 'Seed'], ascending=[True, True])
         teams_data.reset_index(drop=True, inplace=True)
-        #teams_data = fetch.league.get_division_standings()
     if tab == 'overall':
         teams_data = teams_data.sort_values(by=['Seed'], ascending=[True])
         teams_data.reset_index(drop=True, inplace=True)
-        #teams_data = fetch.league.get_overall_standings()
 
     # Configuração arredondamentos
     teams_data['%'] = teams_data['%'].round(3)
@@ -97,8 +96,8 @@ def fanfastats():
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
-    teams_data = league.get_standings_from_season(current_year)
+    matchup_data = fetch.league.get_matchup_data_by_week(week=current_week)
+    teams_data = league.get_standings_from_csv(current_year)
     if request.method=='POST':
         texto=request.form.get('name')
     else:
@@ -112,8 +111,8 @@ def rankings():
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv("league_id"), current_year)
 
-    matchup_data = fetch.league.get_schedule_data(week=current_week)
-    teams_data = league.get_standings_from_season(current_year)
+    matchup_data = fetch.league.get_matchup_data_by_week(week=current_week)
+    teams_data = league.get_standings_from_csv(current_year)
 
     # Selecionando Tab e season para obtenção dos dados
     if request.method == 'POST':
