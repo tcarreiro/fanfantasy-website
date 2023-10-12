@@ -5,7 +5,7 @@
     <div class="matches-strip-list-content">
         <ul class="score-strip-list">
             {% set gamePeriod = 0 %}
-            {% if ((weekday > 1) or (weekday == 2 and hour >= 3)) and (((weekday < 4) or (weekday == 3 and hour < 21))) %}
+            {% if ((weekday > 1) or (weekday == 2 and hour >= 4)) and (((weekday < 4) or (weekday == 3 and hour < 21))) %}
             {% set gamePeriod = 1 %}
             {% endif %}
             {% for i in range(0,8) %}
@@ -13,13 +13,13 @@
                 <div class="score-strip-match-box">
                     <div class="score-strip-team-box">
                         <div class="score-strip-team">
-                            <img class="score-strip-team-logo" src="{{ matchup_data['Logo1'][i] }}" onError="this.onerror=null;this.src='static/img/default.png';"/>
+                            <img class="score-strip-team-logo" src="{{ matchup_data['Logo1'][i] }}" onError="this.onerror=null;this.src='static/img/fanfantasy-logo-white.png';"/>
                             <span>{{ matchup_data['Abbrev1'][i] }}</span>
                         </div>
                         <div class="score-strip-record">
                             <span>
                                 {% if (gamePeriod == 1) %}
-                                {{matchup_data['Record1'][i] }}
+                                {{matchup_data['Wins1'][i]|string + "-" + matchup_data['Losses1'][i]|string + "-" + matchup_data['Ties1'][i]|string}}
                                 {% else %}
                                 {{matchup_data['CurrentStatsTotal1'][i]|round(1) }}
                                 {% endif %}
@@ -28,13 +28,13 @@
                     </div>
                     <div class="score-strip-team-box">
                         <div class="score-strip-team">
-                            <img class="score-strip-team-logo" src="{{ matchup_data['Logo2'][i] }}" onError="this.onerror=null;this.src='static/img/default.png';"/>
+                            <img class="score-strip-team-logo" src="{{ matchup_data['Logo2'][i] }}" onError="this.onerror=null;this.src='static/img/fanfantasy-logo-white.png';"/>
                             <span>{{ matchup_data['Abbrev2'][i] }}</span>
                         </div>
                         <div class="score-strip-record">
                             <span>
                                 {% if (gamePeriod == 1) %}
-                                {{matchup_data['Record2'][i] }}
+                                {{matchup_data['Wins2'][i]|string + "-" + matchup_data['Losses2'][i]|string + "-" + matchup_data['Ties2'][i]|string}}
                                 {% else %}
                                 {{matchup_data['CurrentStatsTotal2'][i]|round(1) }}
                                 {% endif %}
@@ -46,7 +46,7 @@
                         <a href="#"></a>
                         <span>Semana {{ current_week }}</span>
                         <span class="facemask-hover hover-bar"></span>
-                        {% if (gamePeriod == 1) %}
+                        {% if (gamePeriod == 0) %}
                         <span class="hover-bar-playing"></span>
                         {% endif %}
                     </div>

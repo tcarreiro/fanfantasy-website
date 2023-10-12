@@ -7,7 +7,6 @@ class FantasyLeague:
     '''
     ESPN Fantasy Football League class for pulling data from the ESPN API
     '''
-    BASE_URL = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/{year}/segments/0/leagues/{league_id}"
     POSITION_MAPPING = {
         0: 'QB',
         4: 'WR',
@@ -53,7 +52,7 @@ class FantasyLeague:
         cur_df.to_csv(os.getenv('csv_path')+os.getenv(data))
         
     # Retorna a DataFrame das matchups de uma Semana específica do ano que está conectado {{self.year}}
-    def get_matchup_data_by_week(self, week):
+    def get_matchup_data_from_API(self, week):
         # Pull team and matchup data from the URL
         matchup_response = requests.get(self.base_url,
                                         params={"leagueId": self.league_id,
