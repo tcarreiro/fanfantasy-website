@@ -126,6 +126,8 @@ def rankings():
     teams_data['PA'] = teams_data['PA'].round(1)
     teams_data['ExpectedWins'] = teams_data['ExpectedWins'].round(3)
     teams_data['deltaWins'] = teams_data['deltaWins'].round(3)
+    teams_data['MedPF'] = teams_data['MedPF'].round(1)
+    teams_data['MedPA'] = teams_data['MedPA'].round(1)
 
     return render_template('rankings.html', matchup_data=matchup_data, teams_data=teams_data,
                            current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)

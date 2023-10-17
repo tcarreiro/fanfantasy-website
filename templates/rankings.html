@@ -48,6 +48,8 @@
                             <div class="col tb-header">PS</div>
                             <div class="col tb-header">VE</div>
                             <div class="col tb-header">&Delta;V</div>
+                            <div class="col tb-header">MedPF</div>
+                            <div class="col tb-header">MedPS</div>
                         </div>
                         {% for i in range(0,16) %}
                         <div class="row">
@@ -61,6 +63,8 @@
                             <div class="col team">{{ teams_data['PA'][i] }}</div>
                             <div class="col team">{{ teams_data['ExpectedWins'][i] }}</div>
                             <div class="col team">{{ teams_data['deltaWins'][i] }}</div>
+                            <div class="col team">{{ teams_data['MedPF'][i] }}</div>
+                            <div class="col team">{{ teams_data['MedPA'][i] }}</div>
                         </div>
                         {% endfor %}
                     </div>

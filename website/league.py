@@ -46,10 +46,22 @@ def check_if_update_needed(current_week, current_year):
 
     # Se a diferença de semanas chegar em 2, devemos atualizar os DataFrames até a semana anterior
     if (current_week > control_panel['last_standing_update_week'][0] + 1):
+        # Deletar as infos nos CSVs do ano
         delete_standings_from_season(current_year)
+        delete_matchup_from_season(current_year)
+
+        # Infos atualizadas no API para CSV
         fetch.league.season_standings_history_to_csv()
-        att_expected_wins_by_season_by_week(season=current_year, week=current_week-1)
-        att_expected_wins_by_season(season=current_year)
+        fetch.league.season_matchup_history_to_csv()
+
+        # Atualizar colunas no CSV Matchup
+        for i in range(0,current_week):
+            att_infos_on_matchup_week(season=current_year, week=i)
+
+        # Atualizar colunas no CSV standings
+        att_infos_on_standings(season=current_year)
+
+        # Atualizar painel de controle
         att_control_panel(week=current_week-1)
 
 # Controle de atualização dos standings e resultados da rodada. Deverá ser usado no controle de quando as DataFrames serão atualizadas
@@ -121,7 +133,15 @@ def delete_standings_from_season(season):
     standings_df.drop(standings_df[standings_df['Season'] == season].index, inplace=True)
     standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
 
-def att_expected_wins_by_season_by_week(season, week):
+def delete_matchup_from_season(season):
+    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
+
+    # Retirar as standings da Season
+    matchup_df.drop(matchup_df[matchup_df['Season'] == season].index, inplace=True)
+    matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+
+def att_infos_on_matchup_week(season, week):
     matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
     matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
     aux_matchup_df = matchup_df.copy()
@@ -141,7 +161,7 @@ def att_expected_wins_by_season_by_week(season, week):
     for i in range(0, int(len(score_df)/2)):
         aux_matchup_df['ExpectedWins1'][i]=((len(score_df))-score_df['Score1'][i])/(len(score_df)-1)
         aux_matchup_df['ExpectedWins2'][i]=((len(score_df))-score_df['Score1'][i+len(score_df)/2])/(len(score_df)-1)
-    
+           
     # Apagar infos na df original
     matchup_df.drop(matchup_df[(matchup_df['Season'] == season) & (matchup_df['Week'] == week)].index, inplace=True)
 
@@ -153,7 +173,7 @@ def att_expected_wins_by_season_by_week(season, week):
     # Salvar dados no arquivo
     matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
     
-def att_expected_wins_by_season(season):
+def att_infos_on_standings(season):
     standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
     standings_df.drop(standings_df.columns[0], axis=1, inplace=True)
     matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
@@ -163,6 +183,7 @@ def att_expected_wins_by_season(season):
     
     # Retirar todas as temporadas que não sejam a atual
     aux_matchup_df.drop(aux_matchup_df[aux_matchup_df['Season'] != season].index, inplace=True)
+    aux_matchup_df.drop(aux_matchup_df[aux_matchup_df['Winner'] == 'UNDECIDED'].index, inplace=True)
     aux_matchup_df.reset_index(drop=True, inplace=True)
 
     # Retirar todas as temporadas que não sejam a atual
@@ -171,6 +192,42 @@ def att_expected_wins_by_season(season):
 
     for team in range(0, len(aux_standings_df)):
         aux_standings_df['ExpectedWins'][team] = 0
+        aux_standings_df['MedPF'][team] = 0
+        aux_standings_df['MedPA'][team] = 0
+
+        aux_away_df = aux_matchup_df.copy()
+        aux_home_df = aux_matchup_df.copy()
+
+        aux_away_df.drop(aux_away_df[aux_away_df['Name1'] != aux_standings_df['Name'][team]].index, inplace=True)
+        aux_away_df.reset_index(drop=True, inplace=True)
+        aux_home_df.drop(aux_home_df[aux_home_df['Name2'] != aux_standings_df['Name'][team]].index, inplace=True)
+        aux_home_df.reset_index(drop=True, inplace=True)
+
+        pf1_df = pd.DataFrame(columns=['Score'])
+        pa1_df = pd.DataFrame(columns=['Score'])
+        pf2_df = pd.DataFrame(columns=['Score'])
+        pa2_df = pd.DataFrame(columns=['Score'])
+        pf1_df['Score'] = aux_away_df['Score1']
+        pf2_df['Score'] = aux_home_df['Score2']
+        pa1_df['Score'] = aux_away_df['Score2']
+        pa2_df['Score'] = aux_home_df['Score1']
+
+        pf1_df = pd.concat([pf1_df,pf2_df], axis=0, ignore_index=True)
+        pa1_df = pd.concat([pa1_df,pa2_df], axis=0, ignore_index=True)
+
+        pf1_df = pf1_df.sort_values(by=['Score'], ascending=[True])
+        pf1_df.reset_index(drop=True, inplace=True)
+
+        pa1_df = pa1_df.sort_values(by=['Score'], ascending=[True])
+        pa1_df.reset_index(drop=True, inplace=True)
+
+        if len(pf1_df) % 2 == 0:
+            aux_standings_df['MedPF'][team] = (pf1_df['Score'][int(len(pf1_df)/2)-1] + pf1_df['Score'][int(len(pf1_df)/2)])/2
+            aux_standings_df['MedPA'][team] = (pa1_df['Score'][int(len(pf1_df)/2)-1] + pa1_df['Score'][int(len(pf1_df)/2)])/2
+        else:
+            aux_standings_df['MedPF'][team] = pf1_df['Score'][int(len(pf1_df)/2)-1]
+            aux_standings_df['MedPA'][team] = pa1_df['Score'][int(len(pf1_df)/2)-1]
+        
         for match in range(0, len(aux_matchup_df)):
             if (aux_matchup_df['Type'][match] == 'Regular'):
                 if (aux_standings_df['Name'][team] == aux_matchup_df['Name1'][match]):
@@ -185,7 +242,6 @@ def att_expected_wins_by_season(season):
     standings_df = pd.concat([standings_df, aux_standings_df])
     standings_df = standings_df.sort_values(by=['Season', 'id'], ascending=[True, True])
     standings_df.reset_index(drop=True, inplace=True)
-    
 
     # Salvar dados no arquivo
     standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))

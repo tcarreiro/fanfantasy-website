@@ -52,6 +52,7 @@ class FantasyLeague:
         cur_df.to_csv(os.getenv('csv_path')+os.getenv(data))
         
     # Retorna a DataFrame das matchups de uma Semana específica do ano que está conectado {{self.year}}
+    # Usado para os placares em tempo real
     def get_matchup_data_from_API(self, week):
         # Pull team and matchup data from the URL
         matchup_response = requests.get(self.base_url,
@@ -182,8 +183,8 @@ class FantasyLeague:
     # Adiciona ao CSV todas as partidas já finalizadas da season conectada {{self.year}}
     def season_matchup_history_to_csv(self):
         # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
-        #cur_matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
-        #cur_matchup_df.drop(cur_matchup_df.columns[0], axis=1, inplace=True)
+        cur_matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+        cur_matchup_df.drop(cur_matchup_df.columns[0], axis=1, inplace=True)
 
         matchup_response = requests.get(self.base_url,
                                     params={"leagueId": self.league_id,
@@ -263,8 +264,14 @@ class FantasyLeague:
         # Pontos sofridos nas vitórias
         team_df['PAonWins'] = 0 
 
+        # Mediana de Pontos feitos
+        team_df['MedPF'] = 0 
+
+        # Mediana de Pontos sofridos
+        team_df['MedPA'] = 0 
+
         # Retira todas as colunas do DataFrame, exceto as listadas
-        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses', 'PAonWins'])
+        team_df = team_df.filter(['id', 'Logo', 'Name', 'Abbrev', 'Wins', 'Losses', 'Ties', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses', 'PAonWins', 'MedPF', 'MedPA'])
 
         # (1) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.rename(columns={"Team1": "id"})
@@ -282,10 +289,13 @@ class FantasyLeague:
         matchup_df = matchup_df.rename(columns={'PAonLosses': 'PAonLosses1'})
         matchup_df = matchup_df.rename(columns={'PFonLosses': 'PFonLosses1'})
         matchup_df = matchup_df.rename(columns={'PAonWins': 'PAonWins1'})
+        matchup_df = matchup_df.rename(columns={'MedPF': 'MedPF1'})
+        matchup_df = matchup_df.rename(columns={'MedPA': 'MedPA1'})
 
         # (1) Reordena as colunas após a primeira mescla
-        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
-                                 'Team2', 'Score2', 'CurrentStatsTotal2', 'Type']]
+        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1',
+                                 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
+                                 'MedPF1', 'MedPA1', 'Team2', 'Score2', 'CurrentStatsTotal2', 'Type']]
 
         # (2) Renomear as colunas para mesclar os DataFrames e não ter conflitos com nomes iguais
         matchup_df = matchup_df.rename(columns={"Team2": "id"})
@@ -303,26 +313,30 @@ class FantasyLeague:
         matchup_df = matchup_df.rename(columns={'PAonLosses': 'PAonLosses2'})
         matchup_df = matchup_df.rename(columns={'PFonLosses': 'PFonLosses2'})
         matchup_df = matchup_df.rename(columns={'PAonWins': 'PAonWins2'})
+        matchup_df = matchup_df.rename(columns={'MedPF': 'MedPF2'})
+        matchup_df = matchup_df.rename(columns={'MedPA': 'MedPA2'})
 
         # (2) Reordena as colunas após a segunda mescla
-        matchup_df = matchup_df[['Season', 'Week', 'Winner', 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1',
-                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'ExpectedWins2', 'PFonWins2', 'PAonLosses2', 'PFonLosses2', 'PAonWins2', 'Type']]
+        matchup_df = matchup_df[['Season', 'Week', 'Winner',
+                                 'Logo1', 'Name1', 'Abbrev1', 'Wins1', 'Losses1', 'Ties1', 'Score1', 'CurrentStatsTotal1', 'ExpectedWins1', 'PFonWins1', 'PAonLosses1', 'PFonLosses1', 'PAonWins1', 'MedPF1', 'MedPA1',
+                                 'Logo2', 'Name2', 'Abbrev2', 'Wins2', 'Losses2', 'Ties2', 'Score2', 'CurrentStatsTotal2', 'ExpectedWins2', 'PFonWins2', 'PAonLosses2', 'PFonLosses2', 'PAonWins2', 'MedPF2', 'MedPA2',
+                                 'Type']]
         
         # Concatena com dados no arquivo e reescreve
         self.add_data_to_csv(df=matchup_df,data_type='Matchup')
 
         # Concatenar resultado com o backup do arquivo e redefinir os IDs
-        #cur_matchup_df = pd.concat([cur_matchup_df, matchup_df])
-        #cur_matchup_df.reset_index(drop=True, inplace=True)
+        cur_matchup_df = pd.concat([cur_matchup_df, matchup_df])
+        cur_matchup_df.reset_index(drop=True, inplace=True)
         
         # Salvar dados no arquivo
-        #cur_matchup_df.to_csv(os.getenv('csv_path')+"teste_"+os.getenv('matchup_history'))
+        cur_matchup_df.to_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
 
     # Adiciona ao CSV a standing atual da season conectada {{self.year}}
     def season_standings_history_to_csv(self):
         # Fazer backup dos dados e deletar a primeira coluna (duplicação dos IDs)
-        #cur_standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
-        #cur_standings_df.drop(cur_standings_df.columns[0], axis=1, inplace=True)
+        cur_standings_df = pd.read_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+        cur_standings_df.drop(cur_standings_df.columns[0], axis=1, inplace=True)
 
         # Pull team and matchup data from the URL
         team_response = requests.get(self.base_url,
@@ -375,16 +389,22 @@ class FantasyLeague:
 
         # Pontos sofridos nas vitórias
         team_df['PAonWins'] = 0 
+        
+        # Mediana de Pontos feitos
+        team_df['MedPF'] = 0 
 
-        team_df = team_df[['Season', 'id', 'Division', 'Logo', 'Name', 'Abbrev', 'Seed', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses','PAonWins']]
+        # Mediana de Pontos sofridos
+        team_df['MedPA'] = 0 
+
+        team_df = team_df[['Season', 'id', 'Division', 'Logo', 'Name', 'Abbrev', 'Seed', 'Wins', 'Losses', 'Ties', '%', 'PF', 'PA', 'ExpectedWins', 'PFonWins', 'PAonLosses', 'PFonLosses','PAonWins', 'MedPF', 'MedPA']]
 
         # Concatena com dados no arquivo e reescreve
         self.add_data_to_csv(df=team_df,data_type='Standings')
 
         # Concatenar resultado com o backup do arquivo e redefinir os IDs
-        #cur_standings_df = pd.concat([cur_standings_df, team_df])
-        #cur_standings_df.reset_index(drop=True, inplace=True)
+        cur_standings_df = pd.concat([cur_standings_df, team_df])
+        cur_standings_df.reset_index(drop=True, inplace=True)
         
         # Salvar dados no arquivo
-        #cur_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
+        cur_standings_df.to_csv(os.getenv('csv_path')+os.getenv('standings_history'))
 
