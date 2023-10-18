@@ -24,11 +24,21 @@ var requestMatchupESPN = function () {
 requestMatchupESPN();
 
 /* Tabs */
-function changeTabs(tab) {
+function changeTabs(tab, nth, year, table_format='group') {
+    console.log(tab+", "+nth+", "+year+", "+table_format)
+    links = document.querySelectorAll('header nav li')
+    links.forEach(link => {
+        link.classList.remove('active')
+    });
+    links[nth].classList.add('active')
     $.ajax({
         type: "POST",
         url: tab,
         data: {
+            tab: tab, // ???
+            nth: nth, // ???
+            table_format: table_format,
+            year: year,
         },
         success: function (response) {
             $('div#main-content').empty().append(response.data)
@@ -39,14 +49,17 @@ function changeTabs(tab) {
     });
 }
 
-function changeStandingsView(tab, year) {
-    document.getElementById('season_dropdown').value = year
+function changeStandingTableOrder(table_format, year, param, order) {
+    links = document.querySelectorAll('header nav li')
+    console.log(links)
     $.ajax({
         type: "POST",
         url: "/classificacao",
         data: {
-            tab: tab,
+            table_format: table_format,
             year: year,
+            param: param,
+            order: order,
         },
         success: function (response) {
             $('div#main-content').empty().append(response.data)

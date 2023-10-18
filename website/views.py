@@ -21,13 +21,12 @@ views = Blueprint('views', __name__)
 
 @views.route('/', methods=['POST', 'GET'])
 def home():
+    tab = '/'
+    nth = 0
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
 
-    # Tem que ser da API para pegar informação atualizada em tempo real
-    matchup_data = fetch.league.get_matchup_data_from_API(week=current_week)
-
-    return render_template('home.html', current_week=current_week, current_year=current_year, weekday=weekday, hour=time.hour, matchup_data=matchup_data)
+    return render_template('home.html', tab=tab, nth=nth, current_week=current_week, current_year=current_year, weekday=weekday, hour=time.hour)
 
 @views.route('/update_match_strip', methods=['POST'])
 def requestMatchupESPN():
@@ -41,16 +40,20 @@ def requestMatchupESPN():
     return jsonify({'data': render_template('match_strip.html', current_week=current_week, weekday=weekday, current_year=current_year, hour=hour, matchup_data=matchup_data)})
     
 @views.route('/classificacao', methods=['POST'])
-def handleStandingTab():
+def classificacao():
+    tab = '/classificacao'
+    nth = 1
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
     teams_data = league.get_standings_from_csv(current_year)
 
     # Config para os tipos de classificação (divisões ou geral)
-    if request.form.get('tab'):
-        tab = request.form.get('tab')
+    if request.form.get('table_format'):
+        table_format = request.form.get('table_format')
     else:
-        tab = 'group'
+        table_format = 'group'
+
+    # Config para a temporada consultada
     if request.form.get('year'):
         year = int(request.form.get('year'))
     else:
@@ -64,10 +67,10 @@ def handleStandingTab():
         league_year=current_year
 
     # Ordenar standings de acordo com a aba selecionada
-    if tab == 'group':
+    if table_format == 'group':
         teams_data = teams_data.sort_values(by=['Division', 'Seed'], ascending=[True, True])
         teams_data.reset_index(drop=True, inplace=True)
-    if tab == 'overall':
+    if table_format == 'overall':
         teams_data = teams_data.sort_values(by=['Seed'], ascending=[True])
         teams_data.reset_index(drop=True, inplace=True)
 
@@ -76,39 +79,29 @@ def handleStandingTab():
     teams_data['PF'] = teams_data['PF'].round(1)
     teams_data['PA'] = teams_data['PA'].round(1)
 
-    return jsonify({'data': render_template('classificacao-div.html', teams_data=teams_data,
-                           tab=tab, current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)})
-
-@views.route('/fanfastats', methods=['GET', 'POST'])
-def fanfastats():
-    [current_week, weekday, current_year, time] = league.format_date()
-    fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
-
-    matchup_data = fetch.league.get_matchup_data_from_API(week=current_week)
-    teams_data = league.get_standings_from_csv(current_year)
-    
-    return render_template('fanfastats.html', matchup_data=matchup_data, teams_data=teams_data,
-                           current_year=current_year, current_week=current_week, weekday=weekday, hour=time.hour)
+    return jsonify({'data': render_template('classificacao.html', tab=tab, nth=nth, teams_data=teams_data,
+                           table_format=table_format, current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)})
 
 @views.route('/rankings', methods=['GET', 'POST'])
 def rankings():
+    tab = '/rankings'
+    nth = 2
     [current_week, weekday, current_year, time] = league.format_date()
     fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
-
-    matchup_data = fetch.league.get_matchup_data_from_API(week=current_week)
     teams_data = league.get_standings_from_csv(current_year)
 
-    # Selecionando Tab e season para obtenção dos dados
-    if request.method == 'POST':
-        if (request.form.get('form_selector') == 'year'):
-            year = int(request.form.get('season'))
-        if (year != current_year):
-            teams_data = league.get_standings_from_csv(year)
-            [week, day, league_year, time] = league.format_date(year=year)
-        else:
-            league_year=current_year
+    # Config para a temporada consultada
+    if request.form.get('year'):
+        year = int(request.form.get('year'))
     else:
-        league_year = current_year
+        year = current_year
+
+    # Aquisição de dados caso seja solicitado um novo ano
+    if (year != current_year):
+        teams_data = league.get_standings_from_csv(year)
+        [week, day, league_year, time] = league.format_date(year=year)
+    else:
+        league_year=current_year
 
     teams_data['deltaWins'] = teams_data['Wins'] - teams_data['ExpectedWins']
 
@@ -125,8 +118,21 @@ def rankings():
     teams_data['MedPF'] = teams_data['MedPF'].round(1)
     teams_data['MedPA'] = teams_data['MedPA'].round(1)
 
-    return render_template('rankings.html', matchup_data=matchup_data, teams_data=teams_data,
-                           current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)
+    return jsonify({'data': render_template('rankings.html', tab=tab, nth=nth, teams_data=teams_data,
+                           current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)})
+
+@views.route('/fanfastats', methods=['GET', 'POST'])
+def fanfastats():
+    tab = '/fanfastats'
+    nth = 3
+    [current_week, weekday, current_year, time] = league.format_date()
+    fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
+
+    matchup_data = league.get_matchup_from_csv(current_year)
+    teams_data = league.get_standings_from_csv(current_year)
+    
+    return jsonify({'data': render_template('fanfastats.html', tab=tab, nth=nth, matchup_data=matchup_data, teams_data=teams_data,
+                           current_year=current_year, current_week=current_week, weekday=weekday, hour=time.hour)})
 
 ##############################
 ##### DRAFTS

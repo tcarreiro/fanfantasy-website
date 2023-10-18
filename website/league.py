@@ -106,7 +106,7 @@ def reimport_standings_history_from_API(lastSeason):
 
 # Retorna matchup_df DO CSV de uma semana específica
 # Como no momento o CSV só armazena jogos finalizados, não serve para jogos em andamento e jogos futuros
-def get_matchup_from_csv(week, season):
+def get_week_matchup_from_csv(week, season):
     matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
     matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
 
@@ -114,6 +114,15 @@ def get_matchup_from_csv(week, season):
     matchup_df.drop(matchup_df[matchup_df['Season'] != season].index, inplace=True)
     # Retirar todas as semanas não selecionadas
     matchup_df.drop(matchup_df[matchup_df['Week'] != week].index, inplace=True)
+    
+    return matchup_df
+
+def get_matchup_from_csv(season):
+    matchup_df = pd.read_csv(os.getenv('csv_path')+os.getenv('matchup_history'))
+    matchup_df.drop(matchup_df.columns[0], axis=1, inplace=True)
+
+    # Retirar todas as season não selecionadas
+    matchup_df.drop(matchup_df[matchup_df['Season'] != season].index, inplace=True)
     
     return matchup_df
 

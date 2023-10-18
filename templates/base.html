@@ -18,24 +18,23 @@
             <input type="hidden" id="hour" name="hour" value="{{hour}}"/>
             <div id="strip-match" class="matches-strip"></div> <!-- div onde o strip vai ser adicionado por JS -->
 
-
             <header class="strip-header">
                 <div class="header-container">
                     <a href="/" class="header-logo"><img class="header-logo" src="static/img/fanfantasy-logo-blue.png"/></a>
                     <nav class="header-navigation">
                         <ul class="header-navigation-list">
                             <p id="hidden-p" value="{{url_for(request.endpoint)}}"></p>
-                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/' %}active{% endif %}">
-                                <a href="/">Home</a>
+                            <li class="header-navigation-link active">
+                                <a onclick="changeTabs('/', nth=0, document.getElementById('year').value)">Home</a>
                             </li>
-                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/classificacao' %}active{% endif %}">
-                                <a onclick="changeTabs('/classificacao')">Classificação</a>
+                            <li class="header-navigation-link">
+                                    <a onclick="changeTabs('/classificacao', 1, document.getElementById('year').value)">Classificação</a>
+                                </li>
+                            <li class="header-navigation-link">
+                                <a onclick="changeTabs('/rankings', 2, document.getElementById('year').value)">Rankings</a>
                             </li>
-                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/rankings' %}active{% endif %}">
-                                <a href="/rankings">Rankings</a>
-                            </li>
-                            <li class="header-navigation-link {% if url_for(request.endpoint) == '/fanfastats' %}active{% endif %}">
-                                <a href="/fanfastats">Next Gen Fanfastats</a>
+                            <li class="header-navigation-link">
+                                <a onclick="changeTabs('/fanfastats', 3, document.getElementById('year').value)">Next Gen Fanfastats</a>
                             </li>
                         </ul>
                     </nav>

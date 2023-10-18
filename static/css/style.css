@@ -355,6 +355,7 @@ body {
     color: #fafafa;
     padding-bottom: 5px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .strip-header .header-navigation-list li:hover a,
