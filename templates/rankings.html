@@ -1,5 +1,7 @@
 <input type="hidden" id="tab" name="tab" value="{{ tab }}"/>
 <input type="hidden" id="nth" name="nth" value="{{ nth }}"/>
+<input type="hidden" id="cur_param" name="cur_param" value="{{ param }}"/>
+<input type="hidden" id="cur_ascending" name="cur_ascending" value="{{ ascending }}"/>
 <div class="section-parameters">
     <div class="section-parameters-inner">
         <div class="section-parameters-selectors">
@@ -37,22 +39,55 @@
                 <div class="section-table-format">
                     <div class="section-table-title"><h3>Geral</h3></div>
                     <div class="row">
-                        <div class="col first tb-header">Time</div>
-                        <div class="col tb-header">Record</div>
-                        <div class="col tb-header">%</div>
-                        <div class="col tb-header">PF</div>
-                        <div class="col tb-header">PS</div>
-                        <div class="col tb-header">VE</div>
-                        <div class="col tb-header">&Delta;V</div>
-                        <div class="col tb-header">MedPF</div>
-                        <div class="col tb-header">MedPS</div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','Seed','True')">
+                            #
+                        </div>
+                        <div class="col tb-header"></div>
+                        <div class="col first tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','Name','True')">
+                            Time
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','Seed','True')">
+                            Record
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','%','True')">
+                            %
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','PF','True')">
+                            PF
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','PA','True')">
+                            PS
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','ExpectedWins','True')">
+                            VE
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','deltaWins','True')">
+                            &Delta;V
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','MedPF','True')">
+                            MedPF
+                        </div>
+                        <div class="col tb-header"
+                        onclick="changeTabs('{{ tab }}', '{{ nth }}', '{{ league_year }}', 'group','MedPA','True')">
+                            MedPS
+                        </div>
                     </div>
                     {% for i in range(0,16) %}
                     <div class="row">
-                        <div class="col first team">
+                        <div class="col team">{{ teams_data['Seed'][i] }}</div>
+                        <div class="col team">
                             <img class="section-table-team-logo" src="{{ teams_data['Logo'][i] }}" onError="this.onerror=null;this.src='static/img/fanfantasy-logo-white.png';">
-                            <div class="name">{{ teams_data['Name'][i] }}</div>
                         </div>
+                        <div class="col first team name">{{ teams_data['Name'][i] }}</div>
                         <div class="col team">{{ teams_data['Wins'][i] }}-{{ teams_data['Losses'][i] }}-{{ teams_data['Ties'][i] }}</div>
                         <div class="col team">{{ teams_data['%'][i] }}</div>
                         <div class="col team">{{ teams_data['PF'][i] }}</div>

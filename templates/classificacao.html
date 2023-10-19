@@ -73,6 +73,8 @@
                 <div class="section-table-format">
                     <div class="section-table-title"><h3>Geral</h3></div>
                     <div class="row">
+                        <div class="col tb-header">#</div>
+                        <div class="col tb-header"></div>
                         <div class="col first tb-header">Time</div>
                         <div class="col tb-header">Record</div>
                         <div class="col tb-header">%</div>
@@ -81,8 +83,11 @@
                     </div>
                     {% for i in range(0,16) %}
                     <div class="row">
-                        <div class="col first team">
+                        <div class="col team">{{ teams_data['Seed'][i] }}</div>
+                        <div class="col team">
                             <img class="section-table-team-logo" src="{{ teams_data['Logo'][i] }}" onError="this.onerror=null;this.src='static/img/fanfantasy-logo-white.png';">
+                        </div>
+                        <div class="col first team">
                             <div class="name">{{ teams_data['Name'][i] }}</div>
                         </div>
                         <div class="col team">{{ teams_data['Wins'][i] }}-{{ teams_data['Losses'][i] }}-{{ teams_data['Ties'][i] }}</div>

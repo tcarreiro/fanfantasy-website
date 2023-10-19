@@ -589,6 +589,7 @@ body {
     background-color: var(--main-color);
     font-weight: bold;
     color: #FFF;
+    cursor: pointer;
 }
 
 .section-table-title {

@@ -24,8 +24,20 @@ var requestMatchupESPN = function () {
 requestMatchupESPN();
 
 /* Tabs */
-function changeTabs(tab, nth, year, table_format='group') {
+function changeTabs(tab, nth, year, table_format='group', param='Seed') {
     console.log(tab+", "+nth+", "+year+", "+table_format)
+    if (document.getElementById('cur_param') != null) {
+        cur_param = document.getElementById('cur_param').value
+    } else {
+        cur_param = param
+    }
+    if (document.getElementById('cur_ascending') != null) {
+        cur_ascending = document.getElementById('cur_ascending').value
+    } else {
+        cur_ascending = 'False'
+    }
+    console.log(cur_param)
+    console.log(cur_ascending)
     links = document.querySelectorAll('header nav li')
     links.forEach(link => {
         link.classList.remove('active')
@@ -37,29 +49,11 @@ function changeTabs(tab, nth, year, table_format='group') {
         data: {
             tab: tab, // ???
             nth: nth, // ???
-            table_format: table_format,
-            year: year,
-        },
-        success: function (response) {
-            $('div#main-content').empty().append(response.data)
-        },
-        error: function (response) {
-            //$('div#main-content').empty().append(response.data) // TODO Colocar HTML com msg de erro
-        }
-    });
-}
-
-function changeStandingTableOrder(table_format, year, param, order) {
-    links = document.querySelectorAll('header nav li')
-    console.log(links)
-    $.ajax({
-        type: "POST",
-        url: "/classificacao",
-        data: {
-            table_format: table_format,
-            year: year,
+            cur_param: cur_param,
+            cur_ascending: cur_ascending,
             param: param,
-            order: order,
+            table_format: table_format,
+            year: year,
         },
         success: function (response) {
             $('div#main-content').empty().append(response.data)

@@ -24,7 +24,6 @@ def home():
     tab = '/'
     nth = 0
     [current_week, weekday, current_year, time] = league.format_date()
-    fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
 
     return render_template('home.html', tab=tab, nth=nth, current_week=current_week, current_year=current_year, weekday=weekday, hour=time.hour)
 
@@ -44,7 +43,6 @@ def classificacao():
     tab = '/classificacao'
     nth = 1
     [current_week, weekday, current_year, time] = league.format_date()
-    fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
     teams_data = league.get_standings_from_csv(current_year)
 
     # Config para os tipos de classificação (divisões ou geral)
@@ -87,7 +85,6 @@ def rankings():
     tab = '/rankings'
     nth = 2
     [current_week, weekday, current_year, time] = league.format_date()
-    fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
     teams_data = league.get_standings_from_csv(current_year)
 
     # Config para a temporada consultada
@@ -95,6 +92,18 @@ def rankings():
         year = int(request.form.get('year'))
     else:
         year = current_year
+
+    # Recuperação de dados
+    cur_param = request.form.get('cur_param')
+    cur_ascending = request.form.get('cur_ascending')
+    param = request.form.get('param')
+
+    if(cur_param==param):
+        if (cur_ascending == 'True'):
+            cur_ascending = False
+        else:
+            cur_ascending = True
+        print(cur_ascending)
 
     # Aquisição de dados caso seja solicitado um novo ano
     if (year != current_year):
@@ -104,21 +113,23 @@ def rankings():
         league_year=current_year
 
     teams_data['deltaWins'] = teams_data['Wins'] - teams_data['ExpectedWins']
-
-    # Ordenar standings de acordo com a aba selecionada
-    teams_data = teams_data.sort_values(by=['deltaWins'], ascending=[True])
-    teams_data.reset_index(drop=True, inplace=True)
-
+    
     # Configuração arredondamentos
     teams_data['%'] = teams_data['%'].round(3)
     teams_data['PF'] = teams_data['PF'].round(1)
     teams_data['PA'] = teams_data['PA'].round(1)
     teams_data['ExpectedWins'] = teams_data['ExpectedWins'].round(3)
-    teams_data['deltaWins'] = teams_data['deltaWins'].round(3)
     teams_data['MedPF'] = teams_data['MedPF'].round(1)
     teams_data['MedPA'] = teams_data['MedPA'].round(1)
+    teams_data['deltaWins'] = teams_data['deltaWins'].round(3)
 
-    return jsonify({'data': render_template('rankings.html', tab=tab, nth=nth, teams_data=teams_data,
+    # Ordenar standings de acordo com a aba selecionada
+    teams_data = teams_data.sort_values(by=['Seed'], ascending=[~bool(cur_ascending)])
+    teams_data.reset_index(drop=True, inplace=True)
+    teams_data = teams_data.sort_values(by=[param], ascending=[bool(cur_ascending)])
+    teams_data.reset_index(drop=True, inplace=True)
+
+    return jsonify({'data': render_template('rankings.html', tab=tab, nth=nth, ascending=cur_ascending, param=param, teams_data=teams_data,
                            current_year=current_year, current_week=current_week, weekday=weekday, league_year=league_year, hour=time.hour)})
 
 @views.route('/fanfastats', methods=['GET', 'POST'])
@@ -126,7 +137,6 @@ def fanfastats():
     tab = '/fanfastats'
     nth = 3
     [current_week, weekday, current_year, time] = league.format_date()
-    fetch.league = fetch.connect_league(os.getenv('league_id'), current_year)
 
     matchup_data = league.get_matchup_from_csv(current_year)
     teams_data = league.get_standings_from_csv(current_year)
