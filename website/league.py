@@ -174,6 +174,8 @@ def att_infos_on_matchup_week(season, week):
     # Apagar infos na df original
     matchup_df.drop(matchup_df[(matchup_df['Season'] == season) & (matchup_df['Week'] == week)].index, inplace=True)
 
+    aux_matchup_df['ExpectedWins1'] = aux_matchup_df['ExpectedWins1'].round(1)
+
     # Concatenar resultado com o backup do arquivo e redefinir os IDs
     matchup_df = pd.concat([matchup_df, aux_matchup_df])
     matchup_df = matchup_df.sort_values(by=['Season', 'Week'], ascending=[True, True])
@@ -246,6 +248,10 @@ def att_infos_on_standings(season):
     
     # Apagar infos na df original
     standings_df.drop(standings_df[standings_df['Season'] == season].index, inplace=True)
+
+    aux_standings_df['MedPF'] = aux_standings_df['MedPF'].round(1)
+    aux_standings_df['MedPA'] = aux_standings_df['MedPA'].round(1)
+    aux_standings_df['ExpectedWins'] = aux_standings_df['ExpectedWins'].round(1)
 
     # Concatenar resultado com o backup do arquivo e redefinir os IDs
     standings_df = pd.concat([standings_df, aux_standings_df])

@@ -103,7 +103,8 @@ def rankings():
             cur_ascending = False
         else:
             cur_ascending = True
-        print(cur_ascending)
+    else:
+            cur_ascending = True
 
     # Aquisição de dados caso seja solicitado um novo ano
     if (year != current_year):
@@ -124,9 +125,7 @@ def rankings():
     teams_data['deltaWins'] = teams_data['deltaWins'].round(3)
 
     # Ordenar standings de acordo com a aba selecionada
-    teams_data = teams_data.sort_values(by=['Seed'], ascending=[~bool(cur_ascending)])
-    teams_data.reset_index(drop=True, inplace=True)
-    teams_data = teams_data.sort_values(by=[param], ascending=[bool(cur_ascending)])
+    teams_data = teams_data.sort_values(by=[param, 'Seed'], ascending=[bool(cur_ascending), ~bool(cur_ascending)])
     teams_data.reset_index(drop=True, inplace=True)
 
     return jsonify({'data': render_template('rankings.html', tab=tab, nth=nth, ascending=cur_ascending, param=param, teams_data=teams_data,
