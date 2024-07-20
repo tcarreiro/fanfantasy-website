@@ -165,7 +165,7 @@ def get_defenses(draft_board_list) -> pd.DataFrame:
 # Lê e configura a tabela de rookies importada do Fantasy Pros
 def get_rookies_list() -> pd.DataFrame:
     # Rookies
-    rookies_list = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
+    rookies_list = pd.read_csv(os.getenv("csv_path")+os.getenv('ROOKIE_LIST'))
     rookies_list['last_name'] = rookies_list['PLAYER NAME']
     rookies_list['profile_pic'] = ""
     rookies_list['rookie'] = True
@@ -332,8 +332,8 @@ def add_empty_space(count):
 def get_bye_by_team(team, defense_list):
     bye_week = "-"
     for j in range(0,len(defense_list)):
-        team_name = defense_list['first_name'][j] + " " + defense_list['last_name'][j]
-        team_name = team_name.replace(" ","_").lower()
+        team_name = defense_list['first_name'][j].lower() + " " + defense_list['last_name'][j].lower()
+        team_name = team_name.replace(" ", "_")
         if (team == team_name):
             bye_week = defense_list['bye'][j]
             break

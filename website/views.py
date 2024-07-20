@@ -149,7 +149,7 @@ def fanfastats():
 
 @views.route('/draft', methods=['GET', 'POST'])
 def draft():
-    backup_df = pd.read_csv(os.getenv('DRAFT_LIST'))
+    backup_df = pd.read_csv(os.getenv("csv_path")+os.getenv('DRAFT_LIST'))
     player_df = pd.DataFrame()
     display_positions = []
     amount = 0
@@ -184,7 +184,7 @@ def draft_config():
     if request.method == 'POST':
         if (request.form.get('form_selector') == 'import-data-from-espn'):
             new_players_list = espnrequest.get_all_players_pd()
-            new_players_list.to_csv(os.getenv('PLAYERS_LIST'))
+            new_players_list.to_csv(os.getenv("csv_path")+os.getenv('PLAYERS_LIST'))
             msg_id = 1
         elif (request.form.get('form_selector') == 'create-draft-list'):
             espnrequest.create_draft_list(int(request.form.get('fp-board-range')))
